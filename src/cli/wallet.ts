@@ -1,0 +1,81 @@
+// SmartChain CLI Wallet Utility
+import { Wallet } from '../wallet';
+import { DEV_ACCOUNTS, SERVER_CONFIG } from '../config';
+import { TransactionManager } from '../core';
+
+async function showWalletInfo() {
+    console.log('\n💳 SmartChain Development Wallets:');
+    console.log('════════════════════════════════════════════════');
+
+    const rpcUrl = `http://127.0.0.1:${SERVER_CONFIG.rpcPort}`;
+    console.log(`Connected to: ${rpcUrl}\n`);
+
+    for (let i = 0; i < DEV_ACCOUNTS.length; i++) {
+        const accInfo = DEV_ACCOUNTS[i];
+        const wallet = new Wallet(accInfo.privateKey);
+        wallet.connect(rpcUrl);
+
+        try {
+            const balance = await wallet.getBalance();
+            console.log(`Account #${i}:`);
+            console.log(`  Address:     ${accInfo.address}`);
+            console.log(`  Private Key: ${accInfo.privateKey}`);
+            console.log(`  Balance:     ${TransactionManager.formatValue(balance)} SMC`);
+            console.log('────────────────────────────────────────────────');
+        } catch (error) {
+            console.log(`Account #${i}: [Offline - Node not running?]`);
+        }
+    }
+}
+
+async function sendTransaction(fromIdx: number, toAddress: string, amountSMC: string) {
+    const rpcUrl = `http://127.0.0.1:${SERVER_CONFIG.rpcPort}`;
+    const accInfo = DEV_ACCOUNTS[fromIdx];
+
+    if (!accInfo) {
+        console.error('Invalid source account index');
+        return;
+    }
+
+    const wallet = new Wallet(accInfo.privateKey);
+    wallet.connect(rpcUrl);
+
+    const amount = BigInt(parseFloat(amountSMC) * 10 ** 18);
+
+    console.log(`\n📤 Sending ${amountSMC} SMC from Account #${fromIdx} to ${toAddress}...`);
+
+    try {
+        const tx = await wallet.sendTransaction({
+            to: toAddress,
+            value: amount
+        });
+
+        console.log(`✅ Transaction Sent!`);
+        console.log(`🔗 Hash: ${tx.hash}`);
+        console.log(`⏳ Waiting for confirmation...`);
+
+        await tx.wait();
+        console.log(`✨ Transaction confirmed in block!`);
+    } catch (error: any) {
+        console.error(`❌ Error sending transaction: ${error.message}`);
+    }
+}
+
+async function main() {
+    const args = process.argv.slice(2);
+
+    if (args.length === 0 || args[0] === 'list') {
+        await showWalletInfo();
+    } else if (args[0] === 'send') {
+        if (args.length < 4) {
+            console.log('Usage: npm run wallet send <from_index> <to_address> <amount>');
+            console.log('Example: npm run wallet send 0 0x70997970C51812dc3A010C7d01b50e0d17dc79C8 100');
+            return;
+        }
+        await sendTransaction(parseInt(args[1]), args[2], args[3]);
+    } else {
+        console.log('Unknown command. Use "list" or "send".');
+    }
+}
+
+main().catch(console.error);
