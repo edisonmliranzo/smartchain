@@ -4,18 +4,56 @@ import { useWeb3 } from '../contexts/Web3Context';
 import { Rocket, Box, Type, Coins, CheckCircle, AlertCircle, Loader2, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-// Standard ERC20 Bytecode (Minimal OpenZeppelin-like implementation)
-const ERC20_ABI = [
-    "constructor(string name, string symbol, uint256 initialSupply)",
-    "function name() view returns (string)",
-    "function symbol() view returns (string)",
-    "function totalSupply() view returns (uint256)",
-    "function balanceOf(address) view returns (uint256)",
-    "function transfer(address to, uint256 amount) returns (bool)",
-    "event Transfer(address indexed from, address indexed to, uint256 value)"
-];
+// ERC20 Solidity Source Code Template
+const getERC20Source = (name: string, symbol: string, initialSupply: string) => `
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
 
-const ERC20_BYTECODE = "0x608060405234801561001057600080fd5b50604051610e2d380380610e2d83398181016040528101906100329190610166565b8280546101c090610217565b906000526020600020906002020160005b509050610114815b8280546101c090610217565b906000526020600020906002020160005b5080546101c090610217565b906000526020600020906002020160005b5090506100c79091906102aa565b50336000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550610114816102e3565b5061013d9291906102f4565b506101569190610368565b508091505061016290610381565b5090565b82805461017290610217565b906000526020600020906002020160005b50905092915050565b600061018e61018984610419565b6103f4565b9050919050565b60006101a261019d84610419565b6103f4565b9050919050565b60006101b782610433565b9050919050565b6000602082840312156101d257600080fd5b5051919050565b600082825260208201905092915050565b60005b838110156102135780820151818401526020810190506101f8565b5050505090565b600061022482610433565b9050919050565b60006020828403121561024057600080fd5b81518001604051602001808383808284378083019250505090505090506102719190610471565b9050919050565b600081519050919050565b6000819050919050565b600082825260208201905092915050565b60008060008060008060806102c790610471565b905060006102d490610499565b905060006102e0906104c1565b9050949350505050565b60006102ee82846104e7565b905092915050565b60006102ff8261057e565b9050919050565b600061030e82846105f9565b905092915050565b600061032382846200030c610665565b905092915050565b60006200033461033184610433565b61033b84610665565b61034484610665565b905092915050565b600061036282846200034a610665565b905092915050565b600061037582846106ee565b905092915050565b604051806109e301604052806002835260208301339052600d83019291909252519081900360009233928181523392945033929181529190915292519081900360009233928181523392945090509150610c4f806103db6000396000f35b600080fd5b6000819050919050565b6000819050919050565b610411816103fe565b811461041c57600080fd5b50565b60008135905061042c81610406565b92915050565b6000819050919050565b6000819050919050565b600061045e610459610454846103e6565b61042d565b6103e6565b9050919050565b600061047d82610443565b9050919050565b600061049261048d610488846103e6565b61042d565b6103e6565b9050919050565b60006104a582610443565b9050919050565b60006104ba6104b56104b0846103e6565b61042d565b6103e6565b9050919050565b60006104cd82610443565b9050919050565b60006104df8261057e565b9050919050565b600080604083850312156104fa57600080fd5b825161050b81610406565b9150602083015161052181610406565b90509250929050565b60008060008061053c85610433565b935061054684610433565b925061055083610433565b915061055a8261057e565b90509392505050565b6000806040838503121561057557600080fd5b600061058385828601610240565b925050602061059485828601610240565b9150509250929050565b60008135905061058d81610433565b92915050565b6000602082840312156105aa57600080fd5b81356105ba81610406565b9150919050565b600080604083850312156105d157600080fd5b82356105e281610406565b915060208301356105f38161057e565b90509250929050565b600080600080600061061986610433565b945061062385610433565b935061062d84610433565b925061063783610433565b91506106418261057e565b90509392505050565b600061065e8284610731565b905092915050565b600061066f8261057e565b9050919050565b6000806040838503121561068857600080fd5b823561069981610406565b915060208301356106aa8161057e565b90509250929050565b60006106bd8261057e565b9050919050565b60006106da6106d56106d0846103e6565b61042d565b6103e6565b9050919050565b60006106fd82610443565b9050919050565b600061070e8261057e565b9050919050565b60008060008060008061072a876105cb565b9550959050505050565b60008151905091905056";
+contract ${symbol.replace(/[^a-zA-Z0-9]/g, '')}Token {
+    string public name = "${name}";
+    string public symbol = "${symbol}";
+    uint8 public decimals = 18;
+    uint256 public totalSupply;
+    
+    mapping(address => uint256) public balanceOf;
+    mapping(address => mapping(address => uint256)) public allowance;
+    
+    event Transfer(address indexed from, address indexed to, uint256 value);
+    event Approval(address indexed owner, address indexed spender, uint256 value);
+    
+    constructor() {
+        totalSupply = ${initialSupply} * 10 ** uint256(decimals);
+        balanceOf[msg.sender] = totalSupply;
+        emit Transfer(address(0), msg.sender, totalSupply);
+    }
+    
+    function transfer(address to, uint256 value) public returns (bool) {
+        require(balanceOf[msg.sender] >= value, "Insufficient balance");
+        balanceOf[msg.sender] -= value;
+        balanceOf[to] += value;
+        emit Transfer(msg.sender, to, value);
+        return true;
+    }
+    
+    function approve(address spender, uint256 value) public returns (bool) {
+        allowance[msg.sender][spender] = value;
+        emit Approval(msg.sender, spender, value);
+        return true;
+    }
+    
+    function transferFrom(address from, address to, uint256 value) public returns (bool) {
+        require(balanceOf[from] >= value, "Insufficient balance");
+        require(allowance[from][msg.sender] >= value, "Insufficient allowance");
+        balanceOf[from] -= value;
+        balanceOf[to] += value;
+        allowance[from][msg.sender] -= value;
+        emit Transfer(from, to, value);
+        return true;
+    }
+}
+`;
+
+const API_URL = import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}` : 'http://localhost:8545';
 
 export default function TokenCreate() {
     const { account, chainId, connectWallet } = useWeb3();
@@ -25,37 +63,70 @@ export default function TokenCreate() {
     const [isDeploying, setIsDeploying] = useState(false);
     const [deployedAddress, setDeployedAddress] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const [status, setStatus] = useState<string>('');
 
     const handleDeploy = async (e: React.FormEvent) => {
         e.preventDefault();
         setError(null);
         setIsDeploying(true);
+        setStatus('Compiling contract...');
 
         try {
             if (!account || !window.ethereum) {
                 throw new Error("Wallet not connected");
             }
 
+            // Step 1: Compile the contract using the backend compiler
+            const sourceCode = getERC20Source(name, symbol, supply);
+
+            const compileResponse = await fetch(`${API_URL}/api/compiler/compile`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ sourceCode })
+            });
+
+            // Parse response ONCE - can't call .json() twice on the same response
+            const compileResult = await compileResponse.json();
+            console.log('Compile result:', compileResult);
+
+            if (!compileResponse.ok) {
+                throw new Error(compileResult.error || 'Compilation failed');
+            }
+
+            const { abi, bytecode } = compileResult;
+            console.log('ABI:', abi);
+            console.log('Bytecode length:', bytecode?.length);
+            console.log('Bytecode first 100 chars:', bytecode?.substring(0, 100));
+
+            if (!bytecode || bytecode.length === 0) {
+                throw new Error('Compilation returned empty bytecode');
+            }
+
+            setStatus('Deploying contract...');
+
+            // Step 2: Deploy the contract
             const provider = new ethers.BrowserProvider(window.ethereum);
             const signer = await provider.getSigner();
 
-            // Factory
-            const factory = new ethers.ContractFactory(ERC20_ABI, ERC20_BYTECODE, signer);
+            // Ensure bytecode has 0x prefix
+            const finalBytecode = bytecode.startsWith('0x') ? bytecode : '0x' + bytecode;
+            console.log('Final bytecode first 100 chars:', finalBytecode.substring(0, 100));
 
-            // Deploy
-            // We multiply supply by 10^18 for standard decimals
-            const supplyWei = ethers.parseEther(supply);
+            const factory = new ethers.ContractFactory(abi, finalBytecode, signer);
+            console.log('ContractFactory created, deploying...');
+            const contract = await factory.deploy();
 
-            const contract = await factory.deploy(name, symbol, supplyWei);
-
+            setStatus('Waiting for confirmation...');
             await contract.waitForDeployment();
 
             const address = await contract.getAddress();
             setDeployedAddress(address);
+            setStatus('');
 
         } catch (err: any) {
             console.error(err);
             setError(err.message || 'Deployment failed');
+            setStatus('');
         } finally {
             setIsDeploying(false);
         }
@@ -169,7 +240,7 @@ export default function TokenCreate() {
                                     >
                                         {isDeploying ? (
                                             <>
-                                                <Loader2 size={20} className="spinner" /> Deploying Contract...
+                                                <Loader2 size={20} className="spinner" /> {status || 'Processing...'}
                                             </>
                                         ) : (
                                             <>

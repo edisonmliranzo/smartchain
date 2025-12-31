@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8545/api';
-const RPC_URL = 'http://localhost:8545';
+const API_URL = import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api` : 'http://localhost:8545/api';
+const RPC_URL = import.meta.env.VITE_API_URL || 'http://localhost:8545';
 
 // REST API calls
 export const api = {

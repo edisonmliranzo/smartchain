@@ -1,10 +1,10 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-import { getDatabase } from "firebase/database";
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
-import { getStorage } from "firebase/storage";
+import { initializeApp, type FirebaseApp } from "firebase/app";
+import { getAnalytics, type Analytics } from "firebase/analytics";
+import { getDatabase, type Database } from "firebase/database";
+import { getAuth, type Auth } from "firebase/auth";
+import { getFirestore, type Firestore } from "firebase/firestore";
+import { getStorage, type FirebaseStorage } from "firebase/storage";
 
 // Firebase configuration from environment variables
 const firebaseConfig = {
@@ -18,13 +18,36 @@ const firebaseConfig = {
     measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || ""
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = typeof window !== 'undefined' ? getAnalytics(app) : null;
-const db = getDatabase(app);
-const auth = getAuth(app);
-const firestore = getFirestore(app);
-const storage = getStorage(app);
+// Check if Firebase is properly configured
+const isFirebaseConfigured = Boolean(
+    firebaseConfig.apiKey &&
+    firebaseConfig.projectId &&
+    firebaseConfig.apiKey !== "your_firebase_api_key_here"
+);
 
-export { app, analytics, db, auth, firestore, storage };
+// Initialize Firebase only if properly configured
+let app: FirebaseApp | null = null;
+let analytics: Analytics | null = null;
+let db: Database | null = null;
+let auth: Auth | null = null;
+let firestore: Firestore | null = null;
+let storage: FirebaseStorage | null = null;
+
+if (isFirebaseConfigured) {
+    try {
+        app = initializeApp(firebaseConfig);
+        analytics = typeof window !== 'undefined' ? getAnalytics(app) : null;
+        db = getDatabase(app);
+        auth = getAuth(app);
+        firestore = getFirestore(app);
+        storage = getStorage(app);
+        console.log('Firebase initialized successfully');
+    } catch (error) {
+        console.warn('Firebase initialization failed:', error);
+    }
+} else {
+    console.log('Firebase not configured - running without Firebase features');
+}
+
+export { app, analytics, db, auth, firestore, storage, isFirebaseConfigured };
 export default app;

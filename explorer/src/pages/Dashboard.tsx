@@ -122,7 +122,7 @@ export default function Dashboard() {
                                         <div className="cube-face cube-face-back"></div>
                                         <div className="cube-face cube-face-right"></div>
                                         <div className="cube-face cube-face-left"></div>
-                                        <div className="cube-face cube-face-top">{block.transactions.length} txs</div>
+                                        <div className="cube-face cube-face-top">{block.transactions?.length ?? block.transactionCount ?? 0} txs</div>
                                         <div className="cube-face cube-face-bottom"></div>
                                     </Link>
                                 ))}
@@ -157,7 +157,7 @@ export default function Dashboard() {
                 <StatCard
                     icon={<TrendingUp size={24} />}
                     label="Circulating Supply"
-                    value={stats?.totalSupplyFormatted?.split('.')[0] + ' SMC' || '0 SMC'}
+                    value={(stats?.totalSupplyFormatted?.split('.')[0] || '0') + ' SMC'}
                     loading={statsLoading}
                 />
                 <StatCard

@@ -1,11 +1,15 @@
 import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Search, Blocks, Receipt, Droplets, Home, Menu, X, Cpu, Shield, Wallet, Rocket, Bot, Lock, PieChart } from 'lucide-react';
+import { Search, Blocks, Receipt, Droplets, Home, Menu, X, Cpu, Shield, Wallet, Rocket, Bot, Lock, PieChart, FileCode, ScanLine } from 'lucide-react';
 import { useWeb3 } from '../contexts/Web3Context';
+import ThemeToggle from './ThemeToggle';
+import QRScanner from './QRScanner';
+import WalletModal from './WalletModal';
 
 export default function Navbar() {
     const [searchQuery, setSearchQuery] = useState('');
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [showQRScanner, setShowQRScanner] = useState(false);
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -36,7 +40,7 @@ export default function Navbar() {
             left: 0,
             right: 0,
             zIndex: 100,
-            background: 'rgba(15, 15, 26, 0.7)',
+            background: 'var(--bg-card)',
             backdropFilter: 'blur(30px)',
             borderBottom: '1px solid var(--glass-border)',
         }}>
@@ -66,8 +70,8 @@ export default function Navbar() {
                         <Cpu size={24} color="white" />
                     </div>
                     <div>
-                        <div style={{ fontWeight: 900, fontSize: '1.4rem', color: 'white', letterSpacing: '-0.5px' }}>SmartChain</div>
-                        <div style={{ fontSize: '0.65rem', color: 'var(--primary-light)', marginTop: '-4px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '2px' }}>EXplorer</div>
+                        <div style={{ fontWeight: 900, fontSize: '1.4rem', color: 'var(--text-primary)', letterSpacing: '-0.5px' }}>SmartChain</div>
+                        <div style={{ fontSize: '0.65rem', color: 'var(--primary)', marginTop: '-4px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '2px' }}>EXplorer</div>
                     </div>
                 </Link>
 
@@ -99,6 +103,31 @@ export default function Navbar() {
                             transform: 'translateY(-50%)',
                             color: 'var(--text-muted)',
                         }} />
+                        <button
+                            type="button"
+                            onClick={() => setShowQRScanner(true)}
+                            title="Scan QR Code"
+                            style={{
+                                position: 'absolute',
+                                right: '8px',
+                                top: '50%',
+                                transform: 'translateY(-50%)',
+                                background: 'var(--gradient-primary)',
+                                border: 'none',
+                                borderRadius: '8px',
+                                padding: '6px 10px',
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '6px',
+                                color: 'white',
+                                fontSize: '0.75rem',
+                                fontWeight: 600
+                            }}
+                        >
+                            <ScanLine size={14} />
+                            Scan
+                        </button>
                     </div>
                 </form>
 
@@ -116,11 +145,13 @@ export default function Navbar() {
                     <NavLink to="/staking" icon={<Lock size={18} />} label="Staking" active={isActive('/staking')} />
                     <NavLink to="/create-token" icon={<Rocket size={18} />} label="Token Factory" active={isActive('/create-token')} />
                     <NavLink to="/ai-contract" icon={<Bot size={18} />} label="AI Architect" active={isActive('/ai-contract')} />
+                    <NavLink to="/contract" icon={<FileCode size={18} />} label="Contracts" active={isActive('/contract')} />
                     <NavLink to="/faucet" icon={<Droplets size={18} />} label="Faucet" active={isActive('/faucet')} />
                 </div>
 
-                {/* Wallet Button */}
-                <div style={{ marginLeft: '12px' }} className="desktop-nav">
+                {/* Theme Toggle & Wallet Button */}
+                <div style={{ marginLeft: '12px', display: 'flex', alignItems: 'center', gap: '12px' }} className="desktop-nav">
+                    <ThemeToggle />
                     <WalletButton />
                 </div>
 
@@ -131,7 +162,7 @@ export default function Navbar() {
                         display: 'none',
                         background: 'none',
                         border: 'none',
-                        color: 'white',
+                        color: 'var(--text-primary)',
                         cursor: 'pointer',
                     }}
                     className="mobile-menu-btn"
@@ -147,7 +178,7 @@ export default function Navbar() {
                     top: '100%',
                     left: 0,
                     right: 0,
-                    background: 'rgba(15, 15, 26, 0.98)',
+                    background: 'var(--bg-card)',
                     borderTop: '1px solid var(--glass-border)',
                     padding: '20px',
                     display: 'flex',
@@ -174,13 +205,33 @@ export default function Navbar() {
                     <NavLink to="/faucet" icon={<Droplets size={18} />} label="Faucet" active={isActive('/faucet')} fullWidth />
                 </div>
             )}
+
+            {/* QR Scanner Modal */}
+            <QRScanner isOpen={showQRScanner} onClose={() => setShowQRScanner(false)} />
         </nav>
     );
 }
 
 function WalletButton() {
-    const { account, connectWallet, isConnecting, chainId, addNetwork } = useWeb3();
+    const { account, connectWallet, isConnecting, chainId, addNetwork, connectionError, hasWallet, clearError } = useWeb3();
+    const [showModal, setShowModal] = useState(false);
     const isWrongNetwork = chainId !== 1337 && account;
+
+    const handleConnect = async () => {
+        if (!hasWallet) {
+            setShowModal(true);
+            return;
+        }
+        await connectWallet();
+        if (connectionError) {
+            setShowModal(true);
+        }
+    };
+
+    const handleCloseModal = () => {
+        setShowModal(false);
+        clearError();
+    };
 
     if (isWrongNetwork) {
         return (
@@ -213,15 +264,22 @@ function WalletButton() {
     }
 
     return (
-        <button
-            onClick={connectWallet}
-            className="btn btn-primary shine-effect"
-            disabled={isConnecting}
-            style={{ padding: '10px 20px', fontSize: '0.9rem' }}
-        >
-            <Wallet size={18} />
-            {isConnecting ? 'Connecting...' : 'Connect Wallet'}
-        </button>
+        <>
+            <button
+                onClick={handleConnect}
+                className="btn btn-primary shine-effect"
+                disabled={isConnecting}
+                style={{ padding: '10px 20px', fontSize: '0.9rem' }}
+            >
+                <Wallet size={18} />
+                {isConnecting ? 'Connecting...' : 'Connect Wallet'}
+            </button>
+            <WalletModal
+                isOpen={showModal || !!connectionError}
+                onClose={handleCloseModal}
+                error={connectionError || (!hasWallet ? "No Ethereum wallet detected. Please install MetaMask or another Web3 wallet to connect." : null)}
+            />
+        </>
     );
 }
 
@@ -241,18 +299,19 @@ function NavLink({ to, icon, label, active, fullWidth }: {
                 gap: '10px',
                 padding: '10px 18px',
                 borderRadius: '12px',
-                color: active ? 'white' : 'var(--text-secondary)',
+                color: active ? 'var(--primary-dark)' : 'var(--text-secondary)',
                 textDecoration: 'none',
                 fontSize: '0.9rem',
                 fontWeight: 600,
                 transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                background: active ? 'rgba(124, 58, 237, 0.15)' : 'transparent',
-                border: active ? '1px solid rgba(124, 58, 237, 0.2)' : '1px solid transparent',
+                background: active ? 'var(--gradient-glow)' : 'transparent',
+                border: active ? '1px solid var(--primary)' : '1px solid transparent',
+                boxShadow: active ? '0 2px 8px rgba(99, 102, 241, 0.15)' : 'none',
                 width: fullWidth ? '100%' : 'auto'
             }}
-            className={active ? '' : 'shine-effect'}
+            className={active ? 'nav-link-active' : 'shine-effect'}
         >
-            <span style={{ color: active ? 'var(--primary-light)' : 'inherit' }}>{icon}</span>
+            <span style={{ color: active ? 'var(--primary)' : 'inherit' }}>{icon}</span>
             {label}
         </Link>
     );

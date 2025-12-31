@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Dashboard from './pages/Dashboard';
 import Blocks from './pages/Blocks';
@@ -9,16 +9,19 @@ import Address from './pages/Address';
 import Faucet from './pages/Faucet';
 import Validators from './pages/Validators';
 import { Web3Provider } from './contexts/Web3Context';
+import { ThemeProvider } from './contexts/ThemeContext';
 
 import TokenCreate from './pages/TokenCreate';
 import AIContract from './pages/AIContract';
 import Staking from './pages/Staking';
 import Portfolio from './pages/Portfolio';
+import ContractInteract from './pages/ContractInteract';
+import ValidatorList from './pages/ValidatorList';
 
 function App() {
   return (
-    <Web3Provider>
-      <Router>
+    <ThemeProvider>
+      <Web3Provider>
         <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
           <div className="blob blob-1"></div>
           <div className="blob blob-2"></div>
@@ -37,13 +40,16 @@ function App() {
               <Route path="/tx/:hash" element={<TransactionDetail />} />
               <Route path="/address/:address" element={<Address />} />
               <Route path="/validators" element={<Validators />} />
+              <Route path="/validator-staking" element={<ValidatorList />} />
               <Route path="/faucet" element={<Faucet />} />
+              <Route path="/contract" element={<ContractInteract />} />
             </Routes>
           </main>
         </div>
-      </Router>
-    </Web3Provider>
+      </Web3Provider>
+    </ThemeProvider>
   );
 }
 
 export default App;
+
