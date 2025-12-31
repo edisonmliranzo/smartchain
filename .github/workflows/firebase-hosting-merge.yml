@@ -15,7 +15,7 @@ jobs:
           cd explorer && npm install
       - name: Build Explorer
         env:
-          VITE_API_URL: "https://node.smartchain.edisonml.com/api" # Placeholder - we need a real domain or IP with SSL
+          VITE_API_URL: "https://smartchain-e6c0f.web.app"
         run: |
           cd explorer && npm run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
