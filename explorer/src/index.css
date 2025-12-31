@@ -870,7 +870,8 @@ a:hover {
   }
 
   .stats-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
   }
 
   .card {
@@ -878,12 +879,23 @@ a:hover {
   }
 
   .desktop-search,
-  .desktop-nav {
+  .desktop-nav,
+  .desktop-only {
     display: none !important;
   }
 
   .mobile-menu-btn {
     display: block !important;
+  }
+
+  .glass-card {
+    padding: 20px !important;
+  }
+
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
   }
 }
 

@@ -65,23 +65,24 @@ export default function Dashboard() {
         <div className="container animate-in" style={{ paddingTop: '32px', paddingBottom: '64px' }}>
             {/* Hero & Mempool Grid */}
             <div style={{
-                display: 'grid',
-                gridTemplateColumns: '2fr 1fr',
+                display: 'flex',
+                flexWrap: 'wrap',
                 gap: '32px',
                 marginBottom: '48px',
                 alignItems: 'stretch'
             }}>
                 {/* Hero Section */}
                 <div className="glass-card" style={{
+                    flex: '1 1 500px',
+                    minWidth: 'min(100%, 500px)',
                     textAlign: 'left',
-                    padding: '60px 40px',
+                    padding: 'clamp(24px, 5vw, 60px) clamp(20px, 4vw, 40px)',
                     borderRadius: '30px',
                     position: 'relative',
                     overflow: 'hidden',
                     display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    minHeight: '400px'
+                    flexDirection: 'column',
+                    minHeight: 'auto'
                 }}>
                     <div style={{ flex: 1, zIndex: 2 }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
@@ -91,31 +92,31 @@ export default function Dashboard() {
                             </span>
                         </div>
                         <h1 className="gradient-text" style={{
-                            fontSize: '3.5rem',
+                            fontSize: 'clamp(1.8rem, 5vw, 3.5rem)',
                             fontWeight: 900,
                             marginBottom: '16px',
                             letterSpacing: '-1px'
                         }}>
-                            Explore the <br />SmartChain
+                            Explore SmartChain
                         </h1>
                         <p style={{ color: 'var(--text-secondary)', fontSize: '1.2rem', maxWidth: '500px', marginBottom: '32px' }}>
                             A high-performance, EVM-compatible blockchain with Proof of Authority consensus. Built for scale.
                         </p>
-                        <div style={{ display: 'flex', gap: '16px' }}>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
                             <Link to="/faucet" className="btn btn-primary shine-effect">
                                 <Zap size={18} /> Get Free Tokens
                             </Link>
-                            <div className="badge glass" style={{ padding: '10px 20px', borderRadius: '12px', border: '1px solid var(--glass-border)' }}>
-                                <Shield size={16} style={{ marginRight: '8px', color: 'var(--secondary-light)' }} />
+                            <div className="badge glass" style={{ padding: '8px 14px', borderRadius: '12px', border: '1px solid var(--glass-border)', fontSize: '0.85rem' }}>
+                                <Shield size={14} style={{ marginRight: '6px', color: 'var(--secondary-light)' }} />
                                 Chain ID: {chainInfo?.chainId || 1337}
                             </div>
                         </div>
                     </div>
 
-                    {/* 3D Block Visualizer Integration */}
-                    <div style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', perspective: '1000px' }}>
+                    {/* 3D Block Visualizer - Hidden on mobile for cleaner look */}
+                    <div className="desktop-only" style={{ marginTop: '24px', display: 'flex', justifyContent: 'center', alignItems: 'center', perspective: '1000px' }}>
                         {!blocksLoading && blocksData?.blocks ? (
-                            <div className="scene-3d" style={{ transform: 'scale(1.2)' }}>
+                            <div className="scene-3d" style={{ transform: 'scale(0.9)' }}>
                                 {blocksData.blocks.slice(0, 4).map((block: any, i: number) => (
                                     <Link to={`/block/${block.number}`} key={block.number} className="cube" style={{ animationDelay: `${i * 0.1}s` }}>
                                         <div className="cube-face cube-face-front">#{block.number}</div>
@@ -127,11 +128,7 @@ export default function Dashboard() {
                                     </Link>
                                 ))}
                             </div>
-                        ) : (
-                            <div style={{ opacity: 0.15, transform: 'rotate(-15deg)' }}>
-                                <Blocks size={280} color="white" strokeWidth={1} />
-                            </div>
-                        )}
+                        ) : null}
                     </div>
                 </div>
 
@@ -169,13 +166,13 @@ export default function Dashboard() {
             </div>
 
             <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
-                gap: '32px',
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: '24px',
                 marginBottom: '32px'
             }}>
                 {/* Latest Blocks */}
-                <div className="glass-card" style={{ borderRadius: '24px' }}>
+                <div className="glass-card" style={{ borderRadius: '24px', flex: '1 1 350px', minWidth: 'min(100%, 350px)' }}>
                     <div className="card-header">
                         <h2 className="card-title">
                             <Blocks size={20} />
@@ -245,7 +242,7 @@ export default function Dashboard() {
                 </div>
 
                 {/* Latest Transactions */}
-                <div className="glass-card" style={{ borderRadius: '24px' }}>
+                <div className="glass-card" style={{ borderRadius: '24px', flex: '1 1 350px', minWidth: 'min(100%, 350px)' }}>
                     <div className="card-header">
                         <h2 className="card-title">
                             <Receipt size={20} />
