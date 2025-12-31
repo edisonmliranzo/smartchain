@@ -239,10 +239,20 @@ export default function Navbar() {
                             style={{ background: 'rgba(255,255,255,0.05)' }}
                         />
                     </form>
+
+                    {/* Explorer Section */}
+                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px', marginTop: '8px', marginBottom: '8px', paddingLeft: '12px' }}>
+                        Explorer
+                    </div>
                     <NavLink to="/" icon={<Home size={18} />} label="Dashboard" active={isActive('/')} fullWidth onClick={() => setMobileMenuOpen(false)} />
                     <NavLink to="/blocks" icon={<Blocks size={18} />} label="Blocks" active={isActive('/blocks')} fullWidth onClick={() => setMobileMenuOpen(false)} />
                     <NavLink to="/transactions" icon={<Receipt size={18} />} label="Transactions" active={isActive('/transactions')} fullWidth onClick={() => setMobileMenuOpen(false)} />
                     <NavLink to="/validators" icon={<Shield size={18} />} label="Validators" active={isActive('/validators')} fullWidth onClick={() => setMobileMenuOpen(false)} />
+
+                    {/* Developers Section */}
+                    <div style={{ fontSize: '0.75rem', color: 'var(--primary-light)', textTransform: 'uppercase', letterSpacing: '1px', marginTop: '20px', marginBottom: '8px', paddingLeft: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <FileCode size={14} /> Developers
+                    </div>
                     <NavLink to="/portfolio" icon={<PieChart size={18} />} label="Portfolio" active={isActive('/portfolio')} fullWidth onClick={() => setMobileMenuOpen(false)} />
                     <NavLink to="/staking" icon={<Lock size={18} />} label="Staking" active={isActive('/staking')} fullWidth onClick={() => setMobileMenuOpen(false)} />
                     <NavLink to="/create-token" icon={<Rocket size={18} />} label="Token Factory" active={isActive('/create-token')} fullWidth onClick={() => setMobileMenuOpen(false)} />
@@ -250,6 +260,9 @@ export default function Navbar() {
                     <NavLink to="/contract" icon={<FileCode size={18} />} label="Contracts" active={isActive('/contract')} fullWidth onClick={() => setMobileMenuOpen(false)} />
                     <NavLink to="/faucet" icon={<Droplets size={18} />} label="Faucet" active={isActive('/faucet')} fullWidth onClick={() => setMobileMenuOpen(false)} />
                     <NavLink to="/graffiti" icon={<Palette size={18} />} label="Graffiti" active={isActive('/graffiti')} fullWidth onClick={() => setMobileMenuOpen(false)} />
+
+                    {/* Spacer for bottom safe area on mobile */}
+                    <div style={{ height: '80px' }}></div>
                 </div>
             )}
 
