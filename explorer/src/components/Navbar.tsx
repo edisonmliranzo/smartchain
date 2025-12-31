@@ -219,33 +219,37 @@ export default function Navbar() {
                     top: '100%',
                     left: 0,
                     right: 0,
-                    background: 'var(--bg-card)',
+                    height: 'calc(100vh - 80px)', // Full height minus navbar
+                    background: '#0f172a', // Solid background for readability
                     borderTop: '1px solid var(--glass-border)',
                     padding: '20px',
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: '12px'
+                    gap: '12px',
+                    zIndex: 1000,
+                    overflowY: 'auto'
                 }}>
-                    <form onSubmit={handleSearch} style={{ marginBottom: '16px' }}>
+                    <form onSubmit={(e) => { handleSearch(e); setMobileMenuOpen(false); }} style={{ marginBottom: '16px' }}>
                         <input
                             type="text"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             placeholder="🔍 Search..."
                             className="input"
+                            style={{ background: 'rgba(255,255,255,0.05)' }}
                         />
                     </form>
-                    <NavLink to="/" icon={<Home size={18} />} label="Dashboard" active={isActive('/')} fullWidth />
-                    <NavLink to="/blocks" icon={<Blocks size={18} />} label="Blocks" active={isActive('/blocks')} fullWidth />
-                    <NavLink to="/transactions" icon={<Receipt size={18} />} label="Transactions" active={isActive('/transactions')} fullWidth />
-                    <NavLink to="/validators" icon={<Shield size={18} />} label="Validators" active={isActive('/validators')} fullWidth />
-                    <NavLink to="/portfolio" icon={<PieChart size={18} />} label="Portfolio" active={isActive('/portfolio')} fullWidth />
-                    <NavLink to="/staking" icon={<Lock size={18} />} label="Staking" active={isActive('/staking')} fullWidth />
-                    <NavLink to="/create-token" icon={<Rocket size={18} />} label="Token Factory" active={isActive('/create-token')} fullWidth />
-                    <NavLink to="/ai-contract" icon={<Bot size={18} />} label="AI Architect" active={isActive('/ai-contract')} fullWidth />
-                    <NavLink to="/contract" icon={<FileCode size={18} />} label="Contracts" active={isActive('/contract')} fullWidth />
-                    <NavLink to="/faucet" icon={<Droplets size={18} />} label="Faucet" active={isActive('/faucet')} fullWidth />
-                    <NavLink to="/graffiti" icon={<Palette size={18} />} label="Graffiti" active={isActive('/graffiti')} fullWidth />
+                    <NavLink to="/" icon={<Home size={18} />} label="Dashboard" active={isActive('/')} fullWidth onClick={() => setMobileMenuOpen(false)} />
+                    <NavLink to="/blocks" icon={<Blocks size={18} />} label="Blocks" active={isActive('/blocks')} fullWidth onClick={() => setMobileMenuOpen(false)} />
+                    <NavLink to="/transactions" icon={<Receipt size={18} />} label="Transactions" active={isActive('/transactions')} fullWidth onClick={() => setMobileMenuOpen(false)} />
+                    <NavLink to="/validators" icon={<Shield size={18} />} label="Validators" active={isActive('/validators')} fullWidth onClick={() => setMobileMenuOpen(false)} />
+                    <NavLink to="/portfolio" icon={<PieChart size={18} />} label="Portfolio" active={isActive('/portfolio')} fullWidth onClick={() => setMobileMenuOpen(false)} />
+                    <NavLink to="/staking" icon={<Lock size={18} />} label="Staking" active={isActive('/staking')} fullWidth onClick={() => setMobileMenuOpen(false)} />
+                    <NavLink to="/create-token" icon={<Rocket size={18} />} label="Token Factory" active={isActive('/create-token')} fullWidth onClick={() => setMobileMenuOpen(false)} />
+                    <NavLink to="/ai-contract" icon={<Bot size={18} />} label="AI Architect" active={isActive('/ai-contract')} fullWidth onClick={() => setMobileMenuOpen(false)} />
+                    <NavLink to="/contract" icon={<FileCode size={18} />} label="Contracts" active={isActive('/contract')} fullWidth onClick={() => setMobileMenuOpen(false)} />
+                    <NavLink to="/faucet" icon={<Droplets size={18} />} label="Faucet" active={isActive('/faucet')} fullWidth onClick={() => setMobileMenuOpen(false)} />
+                    <NavLink to="/graffiti" icon={<Palette size={18} />} label="Graffiti" active={isActive('/graffiti')} fullWidth onClick={() => setMobileMenuOpen(false)} />
                 </div>
             )}
 
@@ -326,16 +330,18 @@ function WalletButton() {
     );
 }
 
-function NavLink({ to, icon, label, active, fullWidth }: {
+function NavLink({ to, icon, label, active, fullWidth, onClick }: {
     to: string;
     icon: React.ReactNode;
     label: string;
     active?: boolean;
     fullWidth?: boolean;
+    onClick?: () => void;
 }) {
     return (
         <Link
             to={to}
+            onClick={onClick}
             style={{
                 display: 'flex',
                 alignItems: 'center',

@@ -143,10 +143,10 @@ export default function Graffiti() {
 
     return (
         <div className="container animate-in" style={{ paddingTop: '40px', paddingBottom: '80px' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: '40px' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '40px', justifyContent: 'center', alignItems: 'start' }}>
 
                 {/* Main Canvas Area */}
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <div style={{ flex: '1 1 500px', display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 'min(100%, 500px)' }}>
                     <div className="glass-card" style={{ padding: '24px', borderRadius: '24px', overflow: 'hidden' }}>
                         {loading ? (
                             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '40px' }}>
@@ -168,7 +168,7 @@ export default function Graffiti() {
                 </div>
 
                 {/* Sidebar Controls */}
-                <div>
+                <div style={{ flex: '0 0 300px', maxWidth: '100%' }}>
                     <div className="glass-card" style={{ padding: '24px', borderRadius: '24px', position: 'sticky', top: '100px' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
                             <div style={{ padding: '10px', background: 'var(--primary)', borderRadius: '12px', color: 'white' }}>
