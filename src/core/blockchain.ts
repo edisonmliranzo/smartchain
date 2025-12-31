@@ -478,8 +478,8 @@ export class Blockchain extends EventEmitter {
      * Get gas price
      */
     getGasPrice(): bigint {
-        // Return minimum gas price (1 gwei)
-        return BigInt(1000000000);
+        // Return minimum gas price (0.1 gwei) - Cheap and Fair
+        return BigInt(100000000);
     }
 
     /**

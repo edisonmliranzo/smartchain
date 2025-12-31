@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Search, Blocks, Receipt, Droplets, Home, Menu, X, Cpu, Shield, Wallet, Rocket, Bot, Lock, PieChart, FileCode, ScanLine } from 'lucide-react';
+import { Search, Blocks, Receipt, Droplets, Home, Menu, X, Cpu, Shield, Wallet, Rocket, Bot, Lock, PieChart, FileCode, ScanLine, Palette } from 'lucide-react';
 import { useWeb3 } from '../contexts/Web3Context';
 import ThemeToggle from './ThemeToggle';
 import QRScanner from './QRScanner';
@@ -141,12 +141,53 @@ export default function Navbar() {
                     <NavLink to="/blocks" icon={<Blocks size={18} />} label="Blocks" active={isActive('/blocks')} />
                     <NavLink to="/transactions" icon={<Receipt size={18} />} label="Transactions" active={isActive('/transactions')} />
                     <NavLink to="/validators" icon={<Shield size={18} />} label="Validators" active={isActive('/validators')} />
-                    <NavLink to="/portfolio" icon={<PieChart size={18} />} label="Portfolio" active={isActive('/portfolio')} />
-                    <NavLink to="/staking" icon={<Lock size={18} />} label="Staking" active={isActive('/staking')} />
-                    <NavLink to="/create-token" icon={<Rocket size={18} />} label="Token Factory" active={isActive('/create-token')} />
-                    <NavLink to="/ai-contract" icon={<Bot size={18} />} label="AI Architect" active={isActive('/ai-contract')} />
-                    <NavLink to="/contract" icon={<FileCode size={18} />} label="Contracts" active={isActive('/contract')} />
-                    <NavLink to="/faucet" icon={<Droplets size={18} />} label="Faucet" active={isActive('/faucet')} />
+
+                    {/* Developers Dropdown */}
+                    <div className="nav-dropdown-container" style={{ position: 'relative' }}>
+                        <button className="nav-link shine-effect" style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '10px',
+                            padding: '10px 18px',
+                            borderRadius: '12px',
+                            background: 'transparent',
+                            border: '1px solid transparent',
+                            color: 'var(--text-secondary)',
+                            fontSize: '0.9rem',
+                            fontWeight: 600,
+                            cursor: 'pointer',
+                        }}>
+                            <FileCode size={18} />
+                            Developers
+                            <ScanLine size={12} style={{ opacity: 0.5, transform: 'rotate(90deg)' }} />
+                        </button>
+                        <div className="nav-dropdown-menu glass-card" style={{
+                            position: 'absolute',
+                            top: '100%',
+                            right: 0,
+                            width: '240px',
+                            padding: '8px',
+                            marginTop: '8px',
+                            borderRadius: '16px',
+                            display: 'none',
+                            flexDirection: 'column',
+                            gap: '4px',
+                            boxShadow: '0 10px 40px rgba(0,0,0,0.2)'
+                        }}>
+                            <NavLink to="/portfolio" icon={<PieChart size={18} />} label="Portfolio" active={isActive('/portfolio')} fullWidth />
+                            <NavLink to="/staking" icon={<Lock size={18} />} label="Staking" active={isActive('/staking')} fullWidth />
+                            <NavLink to="/ai-contract" icon={<Bot size={18} />} label="AI Architect" active={isActive('/ai-contract')} fullWidth />
+                            <NavLink to="/contract" icon={<FileCode size={18} />} label="Contracts" active={isActive('/contract')} fullWidth />
+                            <NavLink to="/faucet" icon={<Droplets size={18} />} label="Faucet" active={isActive('/faucet')} fullWidth />
+                            <NavLink to="/graffiti" icon={<Palette size={18} />} label="Graffiti" active={isActive('/graffiti')} fullWidth />
+                        </div>
+                        <style>{`
+                            .nav-dropdown-container:hover .nav-dropdown-menu {
+                                display: flex !important;
+                                animation: fadeIn 0.2s ease;
+                            }
+                        `}</style>
+                    </div>
                 </div>
 
                 {/* Theme Toggle & Wallet Button */}
@@ -202,7 +243,9 @@ export default function Navbar() {
                     <NavLink to="/staking" icon={<Lock size={18} />} label="Staking" active={isActive('/staking')} fullWidth />
                     <NavLink to="/create-token" icon={<Rocket size={18} />} label="Token Factory" active={isActive('/create-token')} fullWidth />
                     <NavLink to="/ai-contract" icon={<Bot size={18} />} label="AI Architect" active={isActive('/ai-contract')} fullWidth />
+                    <NavLink to="/contract" icon={<FileCode size={18} />} label="Contracts" active={isActive('/contract')} fullWidth />
                     <NavLink to="/faucet" icon={<Droplets size={18} />} label="Faucet" active={isActive('/faucet')} fullWidth />
+                    <NavLink to="/graffiti" icon={<Palette size={18} />} label="Graffiti" active={isActive('/graffiti')} fullWidth />
                 </div>
             )}
 

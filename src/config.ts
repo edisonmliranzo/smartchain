@@ -51,7 +51,7 @@ export const CHAIN_CONFIG: ChainConfig = {
             receiptsRoot: '0x' + '0'.repeat(64),
             miner: '0x0000000000000000000000000000000000000000',
             difficulty: BigInt(1),
-            gasLimit: BigInt(30000000),
+            gasLimit: BigInt(100000000), // Match block gas limit (Cheap & Fair: High Capacity)
             gasUsed: BigInt(0),
             extraData: '0x',
             nonce: '0x0000000000000000',

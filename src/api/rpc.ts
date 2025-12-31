@@ -335,8 +335,54 @@ export class RPCServer {
     }
 
     private getLogs(filter: any): any[] {
-        // Simplified log filtering
-        return [];
+        const fromBlock = this.resolveBlockNumber(filter.fromBlock || 'latest');
+        const toBlock = this.resolveBlockNumber(filter.toBlock || 'latest');
+        const address = filter.address ? (Array.isArray(filter.address) ? filter.address : [filter.address]).map((a: string) => a.toLowerCase()) : null;
+        const topics = filter.topics || [];
+
+        const logs: any[] = [];
+
+        // Limit range to last 100 blocks if not specified to avoid massive loops in dev
+        const start = fromBlock === -1 ? Math.max(0, this.blockchain.getLatestBlockNumber() - 100) : fromBlock;
+        const end = toBlock === -1 ? this.blockchain.getLatestBlockNumber() : toBlock;
+
+        for (let i = start; i <= end; i++) {
+            const block = this.blockchain.getBlockByNumber(i);
+            if (!block) continue;
+
+            for (const tx of block.transactions) {
+                const receipt = this.blockchain.getTransactionReceipt(tx.hash);
+                if (!receipt) continue;
+
+                for (const log of receipt.logs) {
+                    // Filter by address
+                    if (address && !address.includes(log.address.toLowerCase())) continue;
+
+                    // Filter by topics (simplified exact match for first topic)
+                    if (topics.length > 0 && topics[0]) {
+                        if (log.topics[0] !== topics[0]) continue;
+                    }
+
+                    logs.push({
+                        ...log,
+                        logIndex: CryptoUtils.toHex(log.logIndex),
+                        blockNumber: CryptoUtils.toHex(log.blockNumber),
+                        transactionIndex: CryptoUtils.toHex(log.transactionIndex),
+                        blockHash: log.blockHash,
+                        transactionHash: log.transactionHash,
+                    });
+                }
+            }
+        }
+        return logs;
+    }
+
+    private resolveBlockNumber(blockTag: string): number {
+        if (blockTag === 'latest') return this.blockchain.getLatestBlockNumber();
+        if (blockTag === 'earliest') return 0;
+        if (blockTag === 'pending') return this.blockchain.getLatestBlockNumber();
+        if (blockTag.startsWith('0x')) return parseInt(blockTag, 16);
+        return parseInt(blockTag);
     }
 
     private personalNewAccount(password: string): string {

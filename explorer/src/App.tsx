@@ -17,6 +17,7 @@ import Staking from './pages/Staking';
 import Portfolio from './pages/Portfolio';
 import ContractInteract from './pages/ContractInteract';
 import ValidatorList from './pages/ValidatorList';
+import Graffiti from './pages/Graffiti';
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function App() {
               <Route path="/validators" element={<Validators />} />
               <Route path="/validator-staking" element={<ValidatorList />} />
               <Route path="/faucet" element={<Faucet />} />
+              <Route path="/graffiti" element={<Graffiti />} />
               <Route path="/contract" element={<ContractInteract />} />
             </Routes>
           </main>
