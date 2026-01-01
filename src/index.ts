@@ -68,6 +68,21 @@ async function main() {
     const wsServer = new WSServer(blockchain, SERVER_CONFIG.wsPort);
     await wsServer.start();
 
+    // Start P2P Network
+    const p2pPort = parseInt(process.env.P2P_PORT || '9545');
+    const seedNodes = process.env.P2P_SEEDS ? process.env.P2P_SEEDS.split(',') : [];
+    console.log(`🔗 Starting P2P network on port ${p2pPort}...`);
+    const p2pNetwork = new P2PNetwork(blockchain, p2pPort, seedNodes);
+
+    // Set validator key if available (for block signing)
+    const validatorKey = process.env.VALIDATOR_PRIVATE_KEY;
+    if (validatorKey) {
+        p2pNetwork.setValidatorKey(validatorKey);
+    }
+
+    await p2pNetwork.start();
+    console.log(`🌐 P2P network started with ${seedNodes.length} seed nodes`);
+
     // Start mining if enabled
     if (SERVER_CONFIG.enableMining) {
         const validatorAddress = CHAIN_CONFIG.validators[0];
@@ -91,6 +106,7 @@ async function main() {
     console.log('  📡 Endpoints:');
     console.log(`     RPC:          http://localhost:${SERVER_CONFIG.rpcPort}`);
     console.log(`     WebSocket:    ws://localhost:${SERVER_CONFIG.wsPort}`);
+    console.log(`     P2P:          ws://localhost:${p2pPort}`);
     console.log(`     Explorer API: http://localhost:${SERVER_CONFIG.rpcPort}/api`);
     console.log('');
     console.log('  💳 Development Accounts (DO NOT USE IN PRODUCTION):');
