@@ -8,6 +8,7 @@ export class RPCServer {
     private app: express.Application;
     private blockchain: Blockchain;
     private port: number;
+    private faucetUsedAddresses: Set<string> = new Set(); // Track addresses that have used faucet
 
     constructor(blockchain: Blockchain, port: number = 8545) {
         this.blockchain = blockchain;
@@ -407,11 +408,25 @@ export class RPCServer {
         return blocks.map(b => this.formatBlock(b, false));
     }
 
-    private async faucet(address: string, amount: string = '1000000000000000000'): Promise<string> {
-        // Add funds to address (for testing)
+    private async faucet(address: string, amount: string = '10000000000000000000'): Promise<string> {
+        // Normalize address to lowercase for consistent comparison
+        const normalizedAddress = address.toLowerCase();
+
+        // Check if address has already used the faucet
+        if (this.faucetUsedAddresses.has(normalizedAddress)) {
+            throw { code: -32000, message: 'Faucet already used for this address. Each address can only use the faucet once.' };
+        }
+
+        // Add funds to address (10 SMC = 10 * 10^18 wei)
         const amountBigInt = BigInt(amount);
         this.blockchain.state.addBalance(address, amountBigInt);
-        return `Sent ${TransactionManager.formatValue(amountBigInt)} SMC to ${address}`;
+
+        // Mark address as having used the faucet
+        this.faucetUsedAddresses.add(normalizedAddress);
+
+        console.log(`[Faucet] Sent ${TransactionManager.formatValue(amountBigInt)} SMC to ${address} (Total faucet users: ${this.faucetUsedAddresses.size})`);
+
+        return `Sent ${TransactionManager.formatValue(amountBigInt)} SMC to ${address}. This was your one-time faucet allocation.`;
     }
 
     // Formatters
