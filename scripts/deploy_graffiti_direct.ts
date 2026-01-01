@@ -3,9 +3,17 @@ import * as fs from 'fs';
 import * as path from 'path';
 import solc from 'solc';
 import { ethers } from 'ethers';
+import { config } from 'dotenv';
+
+config(); // Load .env
 
 const CONTRACT_PATH = path.join(__dirname, '../contracts/Graffiti.sol');
-const GENESIS_PRIVATE_KEY = '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80';
+const DEPLOYER_PRIVATE_KEY = process.env.DEPLOYER_PRIVATE_KEY || process.env.VALIDATOR_PRIVATE_KEY;
+
+if (!DEPLOYER_PRIVATE_KEY) {
+    console.error('❌ Error: DEPLOYER_PRIVATE_KEY or VALIDATOR_PRIVATE_KEY not set in .env');
+    process.exit(1);
+}
 
 async function main() {
     console.log('🎨 Compiling Graffiti Contract...');
@@ -60,7 +68,7 @@ async function main() {
         name: 'smartchain'
     });
 
-    const wallet = new ethers.Wallet(GENESIS_PRIVATE_KEY, provider);
+    const wallet = new ethers.Wallet(DEPLOYER_PRIVATE_KEY!, provider);
     const factory = new ethers.ContractFactory(abi, bytecode, wallet);
 
     try {
