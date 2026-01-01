@@ -15,7 +15,7 @@ jobs:
           cd explorer && npm install
       - name: Build Explorer
         env:
-          VITE_API_URL: "http://161.97.150.119:8545"
+          VITE_API_URL: "https://node.smartchain.fun"
         run: |
           cd explorer && npm run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
