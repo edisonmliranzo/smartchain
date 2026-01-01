@@ -92,10 +92,19 @@ export class RPCServer {
     }
 
     private setupRoutes(): void {
-        // JSON-RPC endpoint
+        // JSON-RPC endpoint (supports single and batch)
         this.app.post('/', async (req: Request, res: Response) => {
-            const result = await this.handleRPCRequest(req.body);
-            res.json(result);
+            const body = req.body;
+
+            if (Array.isArray(body)) {
+                // Handle batch request
+                const results = await Promise.all(body.map(r => this.handleRPCRequest(r)));
+                res.json(results);
+            } else {
+                // Handle single request
+                const result = await this.handleRPCRequest(body);
+                res.json(result);
+            }
         });
 
         // Batch RPC requests
