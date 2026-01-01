@@ -8,8 +8,8 @@ import { getChainConfig, DEV_ACCOUNTS } from './config';
 
 // Testnet configuration
 const TESTNET_CONFIG = {
-    rpcPort: 8546,
-    wsPort: 8547,
+    rpcPort: 8548,
+    wsPort: 8549,
     enableMining: true,
 };
 
