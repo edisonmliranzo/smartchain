@@ -1,12 +1,30 @@
 // SmartChain JSON-RPC API Server
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
+import rateLimit from 'express-rate-limit';
 import * as fs from 'fs';
 import * as path from 'path';
 import { Blockchain, CryptoUtils, TransactionManager } from '../core';
 import { RPCRequest, RPCResponse, RPCError } from '../types';
 
 const FAUCET_DATA_FILE = path.join(process.cwd(), 'data', 'faucet_used.json');
+
+// Rate limiting configuration
+const generalLimiter = rateLimit({
+    windowMs: 1 * 60 * 1000, // 1 minute window
+    max: 300, // 300 requests per minute per IP
+    message: { error: 'Too many requests. Please try again later.' },
+    standardHeaders: true,
+    legacyHeaders: false,
+});
+
+const faucetLimiter = rateLimit({
+    windowMs: 60 * 60 * 1000, // 1 hour window
+    max: 3, // 3 faucet requests per hour per IP
+    message: { error: 'Faucet rate limit exceeded. Try again in 1 hour.' },
+    standardHeaders: true,
+    legacyHeaders: false,
+});
 
 export class RPCServer {
     private app: express.Application;
@@ -51,12 +69,24 @@ export class RPCServer {
     }
 
     private setupMiddleware(): void {
-        this.app.use(cors());
+        // CORS - Allow specific origins in production
+        this.app.use(cors({
+            origin: process.env.CORS_ORIGINS
+                ? process.env.CORS_ORIGINS.split(',')
+                : '*', // Allow all if not configured
+            methods: ['GET', 'POST', 'OPTIONS'],
+            allowedHeaders: ['Content-Type', 'Authorization'],
+        }));
+
+        // Rate limiting - applied globally
+        this.app.use(generalLimiter);
+
         this.app.use(express.json({ limit: '10mb' }));
 
-        // Request logging
+        // Request logging (with rate limit indicator)
         this.app.use((req: Request, res: Response, next: NextFunction) => {
-            console.log(`[RPC] ${req.method} ${req.path}`);
+            const ip = req.ip || req.socket.remoteAddress || 'unknown';
+            console.log(`[RPC] ${req.method} ${req.path} from ${ip}`);
             next();
         });
     }
