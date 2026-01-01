@@ -5,11 +5,12 @@ explorer/node_modules/
 # Build outputs
 dist/
 explorer/dist/
+explorer/dist-testnet/
 
-# Environment files
+# Environment files (CONTAINS SECRETS!)
 .env
-.env.local
-.env.production
+.env.*
+!.env.example
 
 # Data files (blockchain state - will be regenerated)
 data/
@@ -30,3 +31,24 @@ Thumbs.db
 test_*.js
 *.txt
 !README.txt
+
+# ======================================
+# SECURITY - NEVER COMMIT THESE FILES!
+# ======================================
+
+# Wallet files
+*.wallet
+*.keystore
+secure_wallet.json
+wallet*.json
+!wallet.ts
+
+# Private key files
+*.pem
+*.key
+private_key*
+validator_key*
+
+# Firebase credentials (if any)
+*-firebase-adminsdk-*.json
+serviceAccountKey.json

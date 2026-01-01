@@ -134,22 +134,46 @@ pm2 restart smartchain-validator
 | **RPC Port** | 8545 |
 | **WebSocket Port** | 8546 |
 
-## Validator Private Keys (Development Only)
+## 🔐 Security Best Practices
 
-⚠️ **WARNING**: These keys are PUBLIC and for development only!
+### Never Share Your Private Key
 
-| Validator | Private Key |
-|-----------|-------------|
-| #1 | `0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80` |
-| #2 | `0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d` |
-| #3 | `0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a` |
-| #4 | `0x7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6` |
-| #5 | `0x47e179ec197488593b187f80a00eb0da91f1b9d0b13f8733639f19c30a34926a` |
+1. **Generate your own key**: `npm run wallet generate`
+2. **Store securely**: Use environment variables, never hardcode
+3. **Backup safely**: Keep encrypted backups offline
+4. **Use hardware wallets**: For high-value validators
 
-For production, always generate new keys and keep them secret!
+### Validator Private Key Setup
+
+```bash
+# Create .env file (NEVER commit this!)
+cat > .env << 'EOF'
+VALIDATOR_PRIVATE_KEY=your_private_key_here
+P2P_SEEDS=ws://161.97.150.119:9545
+EOF
+
+# Secure the file
+chmod 600 .env
+```
+
+⚠️ **WARNING**: The well-known Hardhat/Anvil test keys are compromised!
+Never use them for anything with real value.
+
+## Network Information
+
+| Setting | Value |
+|---------|-------|
+| **Mainnet Chain ID** | 1337 |
+| **Testnet Chain ID** | 13370 |
+| **Block Time** | ~1 second |
+| **RPC Port** | 8545 |
+| **WebSocket Port** | 8546 |
+| **P2P Port** | 9545 |
 
 ## Contact
 
 - **GitHub**: <https://github.com/edisonmliranzo/smartchain>
 - **Explorer**: <https://smartchain.fun>
 - **RPC**: <https://node.smartchain.fun>
+- **Testnet**: <https://testnet.smartchain.fun>
+- **P2P**: wss://p2p.smartchain.fun
