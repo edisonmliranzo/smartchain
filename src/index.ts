@@ -73,6 +73,7 @@ async function main() {
     const seedNodes = process.env.P2P_SEEDS ? process.env.P2P_SEEDS.split(',') : [];
     console.log(`🔗 Starting P2P network on port ${p2pPort}...`);
     const p2pNetwork = new P2PNetwork(blockchain, p2pPort, seedNodes);
+    rpcServer.setP2PNetwork(p2pNetwork);
 
     // Set validator key if available (for block signing)
     const validatorKey = process.env.VALIDATOR_PRIVATE_KEY;

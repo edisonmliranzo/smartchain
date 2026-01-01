@@ -31,6 +31,7 @@ export class RPCServer {
     private blockchain: Blockchain;
     private port: number;
     private faucetUsedAddresses: Set<string> = new Set(); // Track addresses that have used faucet
+    private p2pNetwork: any = null; // P2P Network instance
 
     constructor(blockchain: Blockchain, port: number = 8545) {
         this.blockchain = blockchain;
@@ -39,6 +40,10 @@ export class RPCServer {
         this.loadFaucetData(); // Load persisted faucet data
         this.setupMiddleware();
         this.setupRoutes();
+    }
+
+    public setP2PNetwork(p2p: any): void {
+        this.p2pNetwork = p2p;
     }
 
     private loadFaucetData(): void {
@@ -151,7 +156,12 @@ export class RPCServer {
                 return true;
 
             case 'net_peerCount':
-                return '0x0'; // TODO: P2P
+                if (this.p2pNetwork) {
+                    const count = this.p2pNetwork.getPeerCount();
+                    return '0x' + count.toString(16);
+                }
+                return '0x0';
+
 
             // Chain methods
             case 'eth_chainId':
