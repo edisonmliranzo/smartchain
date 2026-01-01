@@ -312,10 +312,31 @@ export class Blockchain extends EventEmitter {
         console.log(`Starting block production as ${validatorAddress}`);
 
         this.miningInterval = setInterval(async () => {
-            if (this.mempool.getSize() > 0 || true) { // Always produce blocks for PoA
+            // Round-robin PoA: only mine if it's our turn
+            const nextBlockNumber = this.getLatestBlockNumber() + 1;
+            const expectedValidator = this.getValidatorForBlock(nextBlockNumber);
+
+            if (expectedValidator.toLowerCase() === validatorAddress.toLowerCase()) {
+                // It's our turn to mine
                 await this.mineBlock(validatorAddress);
+            } else {
+                // Not our turn - wait for P2P to deliver the block
+                // Log occasionally (every 10 blocks worth of time)
+                if (nextBlockNumber % 10 === 0) {
+                    console.log(`[PoA] Block ${nextBlockNumber}: Waiting for ${expectedValidator.slice(0, 10)}...`);
+                }
             }
         }, this.config.blockTime);
+    }
+
+    /**
+     * Get the expected validator for a specific block number (round-robin)
+     */
+    getValidatorForBlock(blockNumber: number): string {
+        const validators = this.config.validators;
+        if (validators.length === 0) return '';
+        const index = blockNumber % validators.length;
+        return validators[index];
     }
 
     /**
