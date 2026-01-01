@@ -151,7 +151,12 @@ export class P2PNetwork extends EventEmitter {
 
         ws.on('message', (data) => {
             try {
-                const message: P2PMessage = JSON.parse(data.toString());
+                const message: P2PMessage = JSON.parse(data.toString(), (key, value) => {
+                    if (typeof value === 'string' && /^\d+n$/.test(value)) {
+                        return BigInt(value.slice(0, -1));
+                    }
+                    return value;
+                });
                 this.handleMessage(peer, message);
             } catch (error) {
                 console.log(`[P2P] Invalid message from ${peerId}`);
@@ -448,9 +453,9 @@ export class P2PNetwork extends EventEmitter {
             nodeId: this.nodeId
         };
 
-        // Handle BigInt serialization
+        // Handle BigInt serialization (match safe storage format)
         ws.send(JSON.stringify(fullMessage, (key, value) =>
-            typeof value === 'bigint' ? value.toString() : value
+            typeof value === 'bigint' ? value.toString() + 'n' : value
         ));
     }
 
