@@ -316,9 +316,19 @@ export class P2PNetwork extends EventEmitter {
      */
     private handlePeers(peer: PeerInfo, peerList: any[]): void {
         for (const p of peerList) {
-            if (!p.address.includes(this.nodeId)) {
-                this.connectToPeer(`ws://${p.address}:${p.port || 9545}`);
+            if (!p.address || p.address.includes(this.nodeId)) continue;
+
+            // Build peer URL - avoid double ws:// prefix
+            let peerUrl = p.address;
+            if (!peerUrl.startsWith('ws://') && !peerUrl.startsWith('wss://')) {
+                peerUrl = `ws://${peerUrl}`;
             }
+            // Avoid double port
+            if (!peerUrl.includes(':9545') && !peerUrl.includes(':8546')) {
+                peerUrl = `${peerUrl}:${p.port || 9545}`;
+            }
+
+            this.connectToPeer(peerUrl);
         }
     }
 
