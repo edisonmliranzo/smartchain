@@ -26,10 +26,14 @@ export class Blockchain extends EventEmitter {
     private isValidating: boolean = false;
     private validatorAddress: string | null = null;
     private miningInterval: NodeJS.Timeout | null = null;
+    private dbFile: string;
+    private network: string;
 
-    constructor(config: ChainConfig) {
+    constructor(config: ChainConfig, network: string = 'mainnet') {
         super();
         this.config = config;
+        this.network = network;
+        this.dbFile = path.join(process.cwd(), 'data', `${network}_chain_data.json`);
         this.state = new StateManager();
         this.mempool = new Mempool();
         this.evm = new EVMExecutor(this.state, config.chainId, config.blockGasLimit);
@@ -110,10 +114,10 @@ export class Blockchain extends EventEmitter {
      */
     private async loadChain(): Promise<boolean> {
         try {
-            if (!fs.existsSync(DB_FILE)) return false;
+            if (!fs.existsSync(this.dbFile)) return false;
 
-            console.log("Loading chain from disk...");
-            const data = fs.readFileSync(DB_FILE, 'utf8');
+            console.log(`Loading chain from disk (${this.network})...`);
+            const data = fs.readFileSync(this.dbFile, 'utf8');
             const snapshot = JSON.parse(data, (key, value) => {
                 // Heuristic to revive BigInts
                 if (typeof value === 'string' && /^\d+n$/.test(value)) {
@@ -165,7 +169,13 @@ export class Blockchain extends EventEmitter {
                 return value;
             });
 
-            fs.writeFileSync(DB_FILE, data);
+            // Ensure data directory exists
+            const dataDir = path.dirname(this.dbFile);
+            if (!fs.existsSync(dataDir)) {
+                fs.mkdirSync(dataDir, { recursive: true });
+            }
+
+            fs.writeFileSync(this.dbFile, data);
         } catch (error) {
             console.error("Failed to save chain:", error);
         }
