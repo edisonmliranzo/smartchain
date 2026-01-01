@@ -199,6 +199,10 @@ export class P2PNetwork extends EventEmitter {
                 this.handlePeers(peer, message.data);
                 break;
 
+            case 'ping':
+                // Just update lastSeen (already done at start of function)
+                break;
+
             default:
                 console.log(`[P2P] Unknown message type: ${message.type}`);
         }
