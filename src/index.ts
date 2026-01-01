@@ -4,6 +4,7 @@ import cors from 'cors';
 import path from 'path';
 import { Blockchain } from './core';
 import { RPCServer, WSServer, ExplorerAPI, AIService, CompilerService } from './api';
+import { P2PNetwork } from './network';
 import { CHAIN_CONFIG, SERVER_CONFIG, DEV_ACCOUNTS } from './config';
 
 async function main() {
