@@ -4,8 +4,14 @@ import { BlockManager } from './core/block';
 import { CryptoUtils } from './core/crypto';
 
 // Validator accounts for PoA consensus
+// Each validator takes turns producing blocks (round-robin)
+// To become a validator, contact the network admin with your address
 export const VALIDATORS = [
-    '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266', // Default validator
+    '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266', // Validator 1 (Genesis Validator - Edison)
+    '0x70997970C51812dc3A010C7d01b50e0d17dc79C8', // Validator 2 
+    '0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC', // Validator 3
+    '0x90F79bf6EB2c4f870365E785982E1f101E93b906', // Validator 4
+    '0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65', // Validator 5
 ];
 
 // Pre-mined accounts (for testing)
