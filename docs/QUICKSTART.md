@@ -130,4 +130,22 @@ pm2 restart smartchain
 
 ---
 
+## Monitoring & Maintenance
+
+We provide a built-in CLI tool to monitor your validator's health:
+
+```bash
+# Check status (Block height, Peers, Sync)
+npm run validator status
+
+# Check health (Latency)
+npm run validator health
+```
+
+### Fault Tolerance
+
+The network now supports **Auto-Skip**. If a validator goes offline and misses their turn (block time > 2s), the network will automatically skip to the next available validator to ensure the chain keeps moving.
+
+---
+
 **Happy validating! 🎉**

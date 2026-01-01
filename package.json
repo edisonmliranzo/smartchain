@@ -10,6 +10,7 @@
     "build": "tsc",
     "node": "node dist/index.js",
     "wallet": "ts-node src/cli/wallet.ts",
+    "validator": "ts-node src/cli/validator.ts",
     "explorer:dev": "cd explorer && npm run dev",
     "explorer:build": "cd explorer && npm run build",
     "explorer:deploy": "cd explorer && npm run build && firebase deploy --only hosting",

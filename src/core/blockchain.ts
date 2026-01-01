@@ -312,18 +312,42 @@ export class Blockchain extends EventEmitter {
         console.log(`Starting block production as ${validatorAddress}`);
 
         this.miningInterval = setInterval(async () => {
-            // Round-robin PoA: only mine if it's our turn
             const nextBlockNumber = this.getLatestBlockNumber() + 1;
-            const expectedValidator = this.getValidatorForBlock(nextBlockNumber);
+            const validators = this.config.validators;
+            const blockTime = this.config.blockTime;
+            const now = Date.now();
+            const lastBlock = this.getLatestBlock();
+            if (!lastBlock) {
+                console.error("Cannot get latest block to determine validation turn.");
+                return;
+            }
+            const lastBlockTime = lastBlock.header.timestamp;
 
-            if (expectedValidator.toLowerCase() === validatorAddress.toLowerCase()) {
-                // It's our turn to mine
+            // Calculate whose turn it is
+            let turnIndex = nextBlockNumber % validators.length;
+            let currentValidatorObj = validators[turnIndex];
+
+            // FAULT TOLERANCE: If block is late (> 2 * BLOCK_TIME), skip to next validator
+            // We continue skipping every BLOCK_TIME until we find someone online (or us)
+            const timeSinceLastBlock = now - lastBlockTime;
+            if (timeSinceLastBlock > blockTime * 2) {
+                const skippedTurns = Math.floor((timeSinceLastBlock - blockTime) / blockTime);
+                turnIndex = (turnIndex + skippedTurns) % validators.length;
+                currentValidatorObj = validators[turnIndex];
+
+                // Only log occasionally to avoid spam
+                if (nextBlockNumber % 10 === 0) {
+                    console.log(`[PoA] Block ${nextBlockNumber} late! Skipping to validator index ${turnIndex}...`);
+                }
+            }
+
+            if (currentValidatorObj.toLowerCase() === validatorAddress.toLowerCase()) {
+                // It's OUR turn (either naturally or because others were skipped)
                 await this.mineBlock(validatorAddress);
             } else {
-                // Not our turn - wait for P2P to deliver the block
-                // Log occasionally (every 10 blocks worth of time)
-                if (nextBlockNumber % 10 === 0) {
-                    console.log(`[PoA] Block ${nextBlockNumber}: Waiting for ${expectedValidator.slice(0, 10)}...`);
+                // Not our turn
+                if (nextBlockNumber % 20 === 0) {
+                    console.log(`[PoA] Waiting for ${currentValidatorObj.slice(0, 8)}... (Gap: ${timeSinceLastBlock}ms)`);
                 }
             }
         }, this.config.blockTime);
