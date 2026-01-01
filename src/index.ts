@@ -2,7 +2,7 @@
 import express from 'express';
 import cors from 'cors';
 import path from 'path';
-import { Blockchain } from './core';
+import { Blockchain, CryptoUtils } from './core';
 import { RPCServer, WSServer, ExplorerAPI, AIService, CompilerService } from './api';
 import { P2PNetwork } from './network';
 import { CHAIN_CONFIG, SERVER_CONFIG, DEV_ACCOUNTS } from './config';
@@ -85,10 +85,29 @@ async function main() {
 
     // Start mining if enabled
     if (SERVER_CONFIG.enableMining) {
-        const validatorAddress = CHAIN_CONFIG.validators[0];
-        if (validatorAddress) {
+        // Derive validator address from private key if set
+        let validatorAddress = CHAIN_CONFIG.validators[0];
+
+        if (validatorKey) {
+            try {
+                const wallet = CryptoUtils.walletFromPrivateKey(validatorKey);
+                validatorAddress = wallet.address;
+                console.log(`🔑 Using validator address from .env: ${validatorAddress}`);
+            } catch (e) {
+                console.error('Invalid VALIDATOR_PRIVATE_KEY, using default validator');
+            }
+        }
+
+        // Check if this address is in the validators list
+        const isValidator = CHAIN_CONFIG.validators.some(
+            v => v.toLowerCase() === validatorAddress.toLowerCase()
+        );
+
+        if (isValidator) {
             console.log('⛏️  Starting block production (PoA)...');
             blockchain.startValidating(validatorAddress);
+        } else {
+            console.log(`⚠️  Address ${validatorAddress} is not in validators list. Sync-only mode.`);
         }
     }
 
