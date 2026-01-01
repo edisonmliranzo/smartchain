@@ -97,7 +97,11 @@ export class P2PNetwork extends EventEmitter {
      * Connect to a peer
      */
     connectToPeer(address: string): void {
-        if (this.peers.has(address)) return;
+        // Check if we are already connected to this address
+        for (const peer of this.peers.values()) {
+            if (peer.address === address) return;
+        }
+
         if (this.peers.size >= this.maxPeers) return;
 
         try {
@@ -233,6 +237,13 @@ export class P2PNetwork extends EventEmitter {
      */
     private async handleNewBlock(peer: PeerInfo, blockData: any): Promise<void> {
         try {
+            const currentHeight = this.blockchain.getLatestBlockNumber();
+            if (blockData.number && blockData.number > currentHeight + 1) {
+                console.log(`[P2P] Detected gap (current: ${currentHeight}, received: ${blockData.number}). Triggering sync.`);
+                this.requestBlocks(peer, currentHeight + 1, blockData.number);
+                return;
+            }
+
             // Verify block signature if present
             if (blockData.signature) {
                 const isValid = this.verifyBlockSignature(blockData);
