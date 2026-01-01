@@ -400,7 +400,10 @@ export class P2PNetwork extends EventEmitter {
             nodeId: this.nodeId
         };
 
-        const data = JSON.stringify(fullMessage);
+        // Handle BigInt serialization
+        const data = JSON.stringify(fullMessage, (key, value) =>
+            typeof value === 'bigint' ? value.toString() : value
+        );
 
         for (const peer of this.peers.values()) {
             if (peer.ws && peer.ws.readyState === WebSocket.OPEN) {
@@ -420,7 +423,10 @@ export class P2PNetwork extends EventEmitter {
             nodeId: this.nodeId
         };
 
-        ws.send(JSON.stringify(fullMessage));
+        // Handle BigInt serialization
+        ws.send(JSON.stringify(fullMessage, (key, value) =>
+            typeof value === 'bigint' ? value.toString() : value
+        ));
     }
 
     /**
