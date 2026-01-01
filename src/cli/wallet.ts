@@ -37,7 +37,7 @@ async function showWalletInfo() {
     console.log('\n💳 SmartChain Development Wallets:');
     console.log('════════════════════════════════════════════════');
 
-    const rpcUrl = `http://127.0.0.1:${SERVER_CONFIG.rpcPort}`;
+    const rpcUrl = process.env.RPC_URL || 'https://node.smartchain.fun';
     console.log(`Connected to: ${rpcUrl}\n`);
 
     for (let i = 0; i < DEV_ACCOUNTS.length; i++) {
@@ -66,7 +66,7 @@ async function showWalletInfo() {
 }
 
 async function sendTransaction(fromIdx: number, toAddress: string, amountSMC: string) {
-    const rpcUrl = `http://127.0.0.1:${SERVER_CONFIG.rpcPort}`;
+    const rpcUrl = process.env.RPC_URL || 'https://node.smartchain.fun';
     const accInfo = DEV_ACCOUNTS[fromIdx];
 
     if (!accInfo) {
