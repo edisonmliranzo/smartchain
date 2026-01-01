@@ -1,8 +1,12 @@
 // SmartChain JSON-RPC API Server
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
+import * as fs from 'fs';
+import * as path from 'path';
 import { Blockchain, CryptoUtils, TransactionManager } from '../core';
 import { RPCRequest, RPCResponse, RPCError } from '../types';
+
+const FAUCET_DATA_FILE = path.join(process.cwd(), 'data', 'faucet_used.json');
 
 export class RPCServer {
     private app: express.Application;
@@ -14,8 +18,36 @@ export class RPCServer {
         this.blockchain = blockchain;
         this.port = port;
         this.app = express();
+        this.loadFaucetData(); // Load persisted faucet data
         this.setupMiddleware();
         this.setupRoutes();
+    }
+
+    private loadFaucetData(): void {
+        try {
+            if (fs.existsSync(FAUCET_DATA_FILE)) {
+                const data = JSON.parse(fs.readFileSync(FAUCET_DATA_FILE, 'utf-8'));
+                this.faucetUsedAddresses = new Set(data.usedAddresses || []);
+                console.log(`[Faucet] Loaded ${this.faucetUsedAddresses.size} used addresses from disk`);
+            }
+        } catch (error) {
+            console.error('[Faucet] Failed to load faucet data:', error);
+        }
+    }
+
+    private saveFaucetData(): void {
+        try {
+            const dataDir = path.dirname(FAUCET_DATA_FILE);
+            if (!fs.existsSync(dataDir)) {
+                fs.mkdirSync(dataDir, { recursive: true });
+            }
+            fs.writeFileSync(FAUCET_DATA_FILE, JSON.stringify({
+                usedAddresses: Array.from(this.faucetUsedAddresses),
+                lastUpdated: new Date().toISOString()
+            }, null, 2));
+        } catch (error) {
+            console.error('[Faucet] Failed to save faucet data:', error);
+        }
     }
 
     private setupMiddleware(): void {
@@ -423,6 +455,9 @@ export class RPCServer {
 
         // Mark address as having used the faucet
         this.faucetUsedAddresses.add(normalizedAddress);
+
+        // Persist to disk
+        this.saveFaucetData();
 
         console.log(`[Faucet] Sent ${TransactionManager.formatValue(amountBigInt)} SMC to ${address} (Total faucet users: ${this.faucetUsedAddresses.size})`);
 
