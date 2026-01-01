@@ -269,23 +269,45 @@ export class ExplorerAPI {
         const config = this.blockchain.getConfig();
         const recentBlocks = this.blockchain.getRecentBlocks(100);
 
+        // Count blocks per validator
+        const blockCounts: { [address: string]: number } = {};
+        for (const block of recentBlocks) {
+            const miner = block.header.miner.toLowerCase();
+            blockCounts[miner] = (blockCounts[miner] || 0) + 1;
+        }
+
         const validatorStats = config.validators.map((address, index) => {
-            const blocksSigned = recentBlocks.filter(b => b.header.miner.toLowerCase() === address.toLowerCase()).length;
+            const normalizedAddr = address.toLowerCase();
+            const blocksSigned = blockCounts[normalizedAddr] || 0;
             const names = ['Atlas Node', 'Zeus Prime', 'Hermes Oracle', 'Apollo Forge', 'Athena Core'];
+
+            // Determine status based on activity
+            let status = 'registered';
+            if (blocksSigned > 0) {
+                status = 'active';
+            }
 
             return {
                 address: address,
                 name: names[index] || `Validator ${index + 1}`,
                 blocksSigned,
-                uptime: recentBlocks.length > 0 ? (blocksSigned / recentBlocks.length * 100).toFixed(2) : '100.00',
-                status: 'active',
-                avgGasUsed: recentBlocks.length > 0 ? 'medium' : 'low'
+                uptime: recentBlocks.length > 0 ? (blocksSigned / recentBlocks.length * 100).toFixed(2) : '0.00',
+                status,
+                isActive: blocksSigned > 0,
+                commission: '0.00%'
             };
+        });
+
+        // Sort: active validators first, then by blocks signed
+        validatorStats.sort((a, b) => {
+            if (a.isActive !== b.isActive) return a.isActive ? -1 : 1;
+            return b.blocksSigned - a.blocksSigned;
         });
 
         res.json({
             validators: validatorStats,
             count: validatorStats.length,
+            activeCount: validatorStats.filter(v => v.isActive).length,
             totalRecentBlocks: recentBlocks.length
         });
     }
