@@ -444,18 +444,30 @@ export class P2PNetwork extends EventEmitter {
      */
     private maintainPeers(): void {
         const now = Date.now();
-        const timeout = 60000; // 1 minute
+        const timeout = 300000; // 5 minutes timeout
 
-        // Remove stale peers
+        // Ping all peers to keep connection alive
+        const pingMsg = JSON.stringify({
+            type: 'ping',
+            timestamp: now,
+            nodeId: this.nodeId
+        });
+
         for (const [id, peer] of this.peers.entries()) {
+            // Send ping
+            if (peer.ws && peer.ws.readyState === WebSocket.OPEN) {
+                peer.ws.send(pingMsg);
+            }
+
+            // Remove stale peers
             if (now - peer.lastSeen > timeout) {
-                console.log(`[P2P] Removing stale peer: ${peer.address}`);
+                console.log(`[P2P] Removing stale peer: ${peer.address} (Last seen: ${Math.round((now - peer.lastSeen) / 1000)}s ago)`);
                 peer.ws?.close();
                 this.peers.delete(id);
             }
         }
 
-        // Reconnect to seeds if we have few peers
+        // Reconnect to seeds if needed
         if (this.peers.size < 3) {
             this.connectToSeeds();
         }
