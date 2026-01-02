@@ -11,27 +11,32 @@ SmartChain is a complete blockchain implementation featuring Proof of Authority 
 ## ✨ Features
 
 ### Core Blockchain
+
 - **Block Management** - Full block creation, validation, and storage
 - **Transaction Processing** - Sign, validate, and execute transactions
 - **State Management** - Account balances, nonces, contract storage
 - **Merkle Trees** - State root and transaction root computation
 
 ### EVM Compatibility
+
 - **Smart Contracts** - Deploy and interact with Solidity contracts
 - **Contract Execution** - Basic EVM execution for common operations
 - **Gas Metering** - Accurate gas calculation and limits
 
 ### Consensus
+
 - **Proof of Authority (PoA)** - Fast block finality with trusted validators
 - **Block Production** - Automatic block mining at configurable intervals
 - **Validator Management** - Configure authorized block producers
 
 ### API & Networking
+
 - **JSON-RPC API** - Full Ethereum-compatible RPC interface
 - **WebSocket** - Real-time block and transaction subscriptions
 - **REST API** - Explorer-friendly endpoints for querying data
 
 ### Block Explorer
+
 - **Dashboard** - Chain stats, latest blocks, and transactions
 - **Block Details** - View complete block information
 - **Transaction Details** - Track transaction status and receipts
@@ -41,6 +46,7 @@ SmartChain is a complete blockchain implementation featuring Proof of Authority 
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - Node.js 18+
 - npm or yarn
 
@@ -82,15 +88,15 @@ npm start
 
   🚀 SmartChain is running!
 
-  Chain ID:        1337
+  Chain ID:        7001
   Symbol:          SMC
-  Block Time:      3s
-  Gas Limit:       30000000
+  Block Time:      1s
+  Gas Limit:       100000000
 
   📡 Endpoints:
-     RPC:          http://localhost:8545
-     WebSocket:    ws://localhost:8546
-     Explorer API: http://localhost:8545/api
+     RPC:          https://rpc.smartchain.fun
+     WebSocket:    wss://rpc.smartchain.fun
+     Explorer:     https://smartchain.fun
 ```
 
 ### Running the Block Explorer
@@ -102,7 +108,7 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:5173 to view the explorer.
+Open <http://localhost:5173> to view the explorer.
 
 ## 📖 Usage
 
@@ -111,10 +117,11 @@ Open http://localhost:5173 to view the explorer.
 1. Open MetaMask
 2. Click "Add Network"
 3. Enter the following:
-   - **Network Name:** SmartChain
-   - **RPC URL:** http://localhost:8545
-   - **Chain ID:** 1337
+   - **Network Name:** SmartChain Mainnet
+   - **RPC URL:** <https://rpc.smartchain.fun>
+   - **Chain ID:** 7001
    - **Currency Symbol:** SMC
+   - **Block Explorer:** <https://smartchain.fun>
 
 ### Development Accounts
 
@@ -134,7 +141,7 @@ Each account is pre-funded with **1,000,000 SMC**.
 // Using ethers.js
 import { ethers } from 'ethers';
 
-const provider = new ethers.JsonRpcProvider('http://localhost:8545');
+const provider = new ethers.JsonRpcProvider('https://rpc.smartchain.fun');
 
 // Get block number
 const blockNumber = await provider.getBlockNumber();
@@ -164,7 +171,7 @@ console.log('Transaction confirmed:', tx.hash);
 ```javascript
 import { ethers } from 'ethers';
 
-const provider = new ethers.JsonRpcProvider('http://localhost:8545');
+const provider = new ethers.JsonRpcProvider('https://rpc.smartchain.fun');
 const wallet = new ethers.Wallet(
   '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80',
   provider
@@ -270,13 +277,13 @@ Edit `src/config.ts` to customize:
 
 ```typescript
 export const CHAIN_CONFIG: ChainConfig = {
-  chainId: 1337,           // Chain ID
-  chainName: 'SmartChain', // Network name
-  symbol: 'SMC',           // Currency symbol
-  blockTime: 3000,         // Block time in ms
-  blockGasLimit: BigInt(30000000),
-  validators: [...],       // Validator addresses
-  premine: {...},          // Initial allocations
+  chainId: 7001,                    // SmartChain Mainnet
+  chainName: 'SmartChain Mainnet',  // Network name
+  symbol: 'SMC',                    // Currency symbol
+  blockTime: 1000,                  // Block time in ms (1 second)
+  blockGasLimit: BigInt(100000000), // 100M gas
+  validators: [...],                // Validator addresses
+  premine: {...},                   // Initial allocations
 };
 ```
 
@@ -295,12 +302,12 @@ npm run explorer:dev # Run explorer in dev mode
 
 ```bash
 # Get block number
-curl -X POST http://localhost:8545 \
+curl -X POST https://rpc.smartchain.fun \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}'
 
 # Get balance
-curl -X POST http://localhost:8545 \
+curl -X POST https://rpc.smartchain.fun \
   -H "Content-Type: application/json" \
   -d '{"jsonrpc":"2.0","method":"eth_getBalance","params":["0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266","latest"],"id":1}'
 ```
