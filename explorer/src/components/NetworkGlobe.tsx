@@ -1,7 +1,5 @@
-import { useEffect, useRef, useState, useMemo } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Globe from 'react-globe.gl';
-import { useQuery } from '@tanstack/react-query';
-import { api } from '../api';
 
 const NODES = [
     { id: 'Atlas Node', lat: 40.7128, lng: -74.0060, city: 'New York, US', status: 'active' },
@@ -26,7 +24,7 @@ export default function NetworkGlobe() {
         })));
 
         // Generate arcs (Mesh topology)
-        const newArcs = [];
+        const newArcs: any[] = [];
         for (let i = 0; i < NODES.length; i++) {
             for (let j = i + 1; j < NODES.length; j++) {
                 newArcs.push({
@@ -40,10 +38,13 @@ export default function NetworkGlobe() {
         }
         setArcs(newArcs);
 
-        // Auto-rotation
+        // Configure Globe
         if (globeEl.current) {
+            // Center view on Atlantic to show US and Europe (Atlas & Zeus)
+            globeEl.current.pointOfView({ lat: 40, lng: -35, altitude: 2.0 }, 1000);
+
             globeEl.current.controls().autoRotate = true;
-            globeEl.current.controls().autoRotateSpeed = 0.6;
+            globeEl.current.controls().autoRotateSpeed = 0.5;
         }
     }, []);
 
@@ -53,22 +54,21 @@ export default function NetworkGlobe() {
             const randomNode = NODES[Math.floor(Math.random() * NODES.length)];
             setRings(prev => [
                 ...prev.slice(-4),
-                { lat: randomNode.lat, lng: randomNode.lng, maxR: 5, propagationSpeed: 2, repeatPeriod: 800 }
+                { lat: randomNode.lat, lng: randomNode.lng, maxR: 8, propagationSpeed: 4, repeatPeriod: 800 }
             ]);
-        }, 2000);
+        }, 1500);
         return () => clearInterval(interval);
     }, []);
 
     return (
-        <div style={{ width: '100%', height: '500px', background: '#000000', borderRadius: '20px', overflow: 'hidden' }}>
+        <div style={{ width: '100%', height: '100%', background: '#000000', borderRadius: '20px', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Globe
                 ref={globeEl}
                 backgroundColor="rgba(0,0,0,0)"
                 globeImageUrl="//unpkg.com/three-globe/example/img/earth-night.jpg"
-                startRotation={3}
 
                 pointsData={points}
-                pointAltitude={0.1}
+                pointAltitude={0.15}
                 pointColor="color"
                 pointRadius="size"
                 pointLabel="id"
@@ -85,6 +85,9 @@ export default function NetworkGlobe() {
                 ringMaxRadius="maxR"
                 ringPropagationSpeed="propagationSpeed"
                 ringRepeatPeriod="repeatPeriod"
+
+                width={800} // Explicit width/height to ensure proper rendering if container is tricky
+                height={600}
             />
         </div>
     );
