@@ -23,6 +23,16 @@ pm2 start dist/index.js --name smartchain-node
 pm2 save
 ```
 
+## 🦊 MetaMask Connection Details
+
+To connect your wallet to the **SmartChain Mainnet**, use these settings:
+
+- **Network Name**: `SmartChain Mainnet`
+- **RPC URL**: `http://161.97.150.119:8545` (or your domain/RPC URL)
+- **Chain ID**: `7001`
+- **Currency Symbol**: `SMC`
+- **Block Explorer URL**: `https://smartchain.fun`
+
 ## Work Completed
 
 We successfully debugged and fixed several critical issues preventing the Validator nodes from syncing and operating correctly.
