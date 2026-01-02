@@ -7,6 +7,22 @@
 - **Faucet UI**: Cyberpunk-themed liquidity request page (`/faucet`).
 - **SmartLaunch**: No-code Token Factory (`/create-token`).
 
+## 🚀 Deployment Instructions (VPS)
+
+To apply the **Chain ID 7001** update and start the **SmartChain Mainnet**, run these commands on your VPS:
+
+```bash
+cd /opt/smartchain
+git pull
+npm install
+npm run build
+
+# Restart Node (Clean Start)
+pm2 delete all
+pm2 start dist/index.js --name smartchain-node
+pm2 save
+```
+
 ## Work Completed
 
 We successfully debugged and fixed several critical issues preventing the Validator nodes from syncing and operating correctly.
