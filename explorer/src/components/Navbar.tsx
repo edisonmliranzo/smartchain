@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Search, Blocks, Receipt, Droplets, Home, Menu, X, Cpu, Shield, Wallet, Rocket, Bot, Lock, PieChart, FileCode, ScanLine, Palette, Globe, MessageSquare } from 'lucide-react';
+import { Search, Blocks, Receipt, Droplets, Home, Menu, X, Cpu, Shield, Wallet, Rocket, Bot, Lock, PieChart, FileCode, ScanLine, Palette, Globe, MessageSquare, FileText } from 'lucide-react';
 import { useWeb3 } from '../contexts/Web3Context';
 import ThemeToggle from './ThemeToggle';
 import QRScanner from './QRScanner';
@@ -182,6 +182,7 @@ export default function Navbar() {
                             <NavLink to="/contract" icon={<FileCode size={18} />} label="Contracts" active={isActive('/contract')} fullWidth />
                             <NavLink to="/faucet" icon={<Droplets size={18} />} label="Faucet" active={isActive('/faucet')} fullWidth />
                             <NavLink to="/graffiti" icon={<Palette size={18} />} label="Graffiti" active={isActive('/graffiti')} fullWidth />
+                            <NavLink to="/whitepaper" icon={<FileText size={18} />} label="Whitepaper" active={isActive('/whitepaper')} fullWidth />
                         </div>
                         <style>{`
                             .nav-dropdown-container:hover .nav-dropdown-menu {

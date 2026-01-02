@@ -20,6 +20,7 @@ import ValidatorList from './pages/ValidatorList';
 import Graffiti from './pages/Graffiti';
 import Network from './pages/Network';
 import ChainChat from './pages/ChainChat';
+import Whitepaper from './pages/Whitepaper';
 
 function App() {
   return (
@@ -49,6 +50,7 @@ function App() {
               <Route path="/faucet" element={<Faucet />} />
               <Route path="/graffiti" element={<Graffiti />} />
               <Route path="/contract" element={<ContractInteract />} />
+              <Route path="/whitepaper" element={<Whitepaper />} />
             </Routes>
           </main>
         </div>
