@@ -1,4 +1,4 @@
-import { FileText, Zap, Shield, Globe, Coins, Users, Rocket, CheckCircle, Target, TrendingUp } from 'lucide-react';
+import { FileText, Zap, Shield, Globe, Coins, Users, Rocket, CheckCircle, Target } from 'lucide-react';
 
 export default function Whitepaper() {
     return (
