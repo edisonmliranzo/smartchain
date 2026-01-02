@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Search, Blocks, Receipt, Droplets, Home, Menu, X, Cpu, Shield, Wallet, Rocket, Bot, Lock, PieChart, FileCode, ScanLine, Palette } from 'lucide-react';
+import { Search, Blocks, Receipt, Droplets, Home, Menu, X, Cpu, Shield, Wallet, Rocket, Bot, Lock, PieChart, FileCode, ScanLine, Palette, Globe, MessageSquare } from 'lucide-react';
 import { useWeb3 } from '../contexts/Web3Context';
 import ThemeToggle from './ThemeToggle';
 import QRScanner from './QRScanner';
@@ -141,6 +141,8 @@ export default function Navbar() {
                     <NavLink to="/blocks" icon={<Blocks size={18} />} label="Blocks" active={isActive('/blocks')} />
                     <NavLink to="/transactions" icon={<Receipt size={18} />} label="Transactions" active={isActive('/transactions')} />
                     <NavLink to="/validators" icon={<Shield size={18} />} label="Validators" active={isActive('/validators')} />
+                    <NavLink to="/network" icon={<Globe size={18} />} label="Network" active={isActive('/network')} />
+                    <NavLink to="/chat" icon={<MessageSquare size={18} />} label="Chat" active={isActive('/chat')} />
 
                     {/* Developers Dropdown */}
                     <div className="nav-dropdown-container" style={{ position: 'relative' }}>
@@ -248,6 +250,8 @@ export default function Navbar() {
                     <NavLink to="/blocks" icon={<Blocks size={18} />} label="Blocks" active={isActive('/blocks')} fullWidth onClick={() => setMobileMenuOpen(false)} />
                     <NavLink to="/transactions" icon={<Receipt size={18} />} label="Transactions" active={isActive('/transactions')} fullWidth onClick={() => setMobileMenuOpen(false)} />
                     <NavLink to="/validators" icon={<Shield size={18} />} label="Validators" active={isActive('/validators')} fullWidth onClick={() => setMobileMenuOpen(false)} />
+                    <NavLink to="/network" icon={<Globe size={18} />} label="Network" active={isActive('/network')} fullWidth onClick={() => setMobileMenuOpen(false)} />
+                    <NavLink to="/chat" icon={<MessageSquare size={18} />} label="Chat" active={isActive('/chat')} fullWidth onClick={() => setMobileMenuOpen(false)} />
 
                     {/* Developers Section */}
                     <div style={{ fontSize: '0.75rem', color: 'var(--primary-light)', textTransform: 'uppercase', letterSpacing: '1px', marginTop: '20px', marginBottom: '8px', paddingLeft: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>

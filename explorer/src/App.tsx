@@ -1,23 +1,7 @@
-import { Routes, Route } from 'react-router-dom';
-import Navbar from './components/Navbar';
-import Dashboard from './pages/Dashboard';
-import Blocks from './pages/Blocks';
-import TransactionDetail from './pages/TransactionDetail';
-import Transactions from './pages/Transactions';
-import BlockDetail from './pages/BlockDetail';
-import Address from './pages/Address';
-import Faucet from './pages/Faucet';
-import Validators from './pages/Validators';
-import { Web3Provider } from './contexts/Web3Context';
-import { ThemeProvider } from './contexts/ThemeContext';
+import Network from './pages/Network';
+import ChainChat from './pages/ChainChat';
 
-import TokenCreate from './pages/TokenCreate';
-import AIContract from './pages/AIContract';
-import Staking from './pages/Staking';
-import Portfolio from './pages/Portfolio';
-import ContractInteract from './pages/ContractInteract';
-import ValidatorList from './pages/ValidatorList';
-import Graffiti from './pages/Graffiti';
+// ... imports
 
 function App() {
   return (
@@ -32,6 +16,8 @@ function App() {
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/blocks" element={<Blocks />} />
+              <Route path="/network" element={<Network />} />
+              <Route path="/chat" element={<ChainChat />} />
               <Route path="/create-token" element={<TokenCreate />} />
               <Route path="/ai-contract" element={<AIContract />} />
               <Route path="/staking" element={<Staking />} />

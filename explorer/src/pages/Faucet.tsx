@@ -1,180 +1,181 @@
-
-import { useState } from 'react';
-import { Droplets, Shield, CheckCircle, AlertTriangle, ArrowRight } from 'lucide-react';
-import { useWeb3 } from '../contexts/Web3Context';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8545';
+import { useState, useEffect } from 'react';
+import { api } from '../api';
+import { Terminal, Shield, Zap, AlertTriangle, CheckCircle } from 'lucide-react';
 
 export default function Faucet() {
-    const { account } = useWeb3();
     const [address, setAddress] = useState('');
-    const [loading, setLoading] = useState(false);
-    const [success, setSuccess] = useState<string | null>(null);
-    const [error, setError] = useState<string | null>(null);
+    const [status, setStatus] = useState<'idle' | 'mining' | 'success' | 'error'>('idle');
+    const [logs, setLogs] = useState<string[]>([]);
+    const [txHash, setTxHash] = useState('');
 
-    const handleRequest = async (e: React.FormEvent) => {
+    const addLog = (msg: string) => {
+        setLogs(prev => [...prev.slice(-4), `> ${msg}`]);
+    };
+
+    const requestFunds = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (!address) return;
 
-        const targetAddress = address || account;
-        if (!targetAddress) {
-            setError('Please enter an address or connect wallet');
-            return;
-        }
-
-        setLoading(true);
-        setError(null);
-        setSuccess(null);
+        setStatus('mining');
+        setLogs([]);
+        addLog(`Initiating secure connection to Grid Node...`);
 
         try {
-            const response = await fetch(API_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    jsonrpc: '2.0',
-                    method: 'smc_faucet',
-                    params: [targetAddress, '10000000000000000000'], // 10 SMC
-                    id: 1
-                }),
-            });
+            // Simulate hacker sequence
+            await new Promise(r => setTimeout(r, 800));
+            addLog(`Bypassing firewall... [ACCESS GRANTED]`);
+            await new Promise(r => setTimeout(r, 600));
+            addLog(`Requesting liquidity injection for ${address.slice(0, 6)}...`);
 
-            const data = await response.json();
+            const response = await api.requestFaucet(address);
 
-            if (data.error) {
-                throw new Error(data.error.message);
-            }
+            await new Promise(r => setTimeout(r, 600));
+            addLog(`Transaction signed. Hash: ${response.hash?.slice(0, 10)}...`);
+            addLog(`Funds transfer complete. 10 SMC credited.`);
 
-            setSuccess(`Successfully sent 10 SMC to ${targetAddress}`);
-            setAddress('');
-        } catch (err: any) {
-            setError(err.message || 'Failed to request funds');
-        } finally {
-            setLoading(false);
+            setStatus('success');
+            setTxHash(response.hash || '0x...');
+        } catch (error: any) {
+            addLog(`ERROR: Connection refused. ${error.response?.data?.error || error.message}`);
+            setStatus('error');
         }
     };
 
     return (
-        <div className="container animate-in" style={{ paddingTop: '40px', paddingBottom: '80px' }}>
-            <div style={{ maxWidth: '600px', margin: '0 auto' }}>
+        <div className="container animate-in" style={{ paddingTop: '32px', paddingBottom: '64px' }}>
+            <div className="glass-card" style={{
+                maxWidth: '800px',
+                margin: '0 auto',
+                border: '1px solid #00ff41',
+                background: 'rgba(0, 10, 0, 0.9)',
+                boxShadow: '0 0 20px rgba(0, 255, 65, 0.2)',
+                position: 'relative',
+                overflow: 'hidden'
+            }}>
+                {/* Matrix Rain Effect Background Placeholder */}
+                <div style={{
+                    position: 'absolute',
+                    top: 0, left: 0, right: 0, bottom: 0,
+                    background: 'linear-gradient(180deg, rgba(0,20,0,0) 0%, rgba(0,50,0,0.2) 100%)',
+                    pointerEvents: 'none'
+                }} />
 
-                {/* Header */}
-                <div className="glass-card" style={{
-                    padding: '48px',
-                    borderRadius: '24px',
-                    textAlign: 'center',
-                    marginBottom: '24px',
-                    position: 'relative',
-                    overflow: 'hidden'
-                }}>
-                    <div style={{ position: 'relative', zIndex: 2 }}>
+                <div style={{ padding: '40px', position: 'relative', zIndex: 2 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '32px' }}>
                         <div style={{
-                            width: '80px',
-                            height: '80px',
-                            background: 'var(--primary)',
-                            borderRadius: '20px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            margin: '0 auto 24px',
-                            boxShadow: '0 10px 30px rgba(99, 102, 241, 0.4)'
+                            background: '#00ff41',
+                            color: 'black',
+                            padding: '12px',
+                            borderRadius: '8px'
                         }}>
-                            <Droplets size={40} color="white" />
+                            <Terminal size={32} />
                         </div>
-                        <h1 className="gradient-text" style={{ fontSize: '2.5rem', marginBottom: '16px' }}>
-                            SMC Faucet
-                        </h1>
-                        <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>
-                            Get free SMC tokens to test your DApps and explore the ecosystem.
-                        </p>
+                        <div>
+                            <h1 style={{
+                                fontFamily: 'monospace',
+                                color: '#00ff41',
+                                margin: 0,
+                                fontSize: '2rem',
+                                textShadow: '0 0 10px rgba(0, 255, 65, 0.5)'
+                            }}>
+                                SMC_FAUCET_V1.0
+                            </h1>
+                            <p style={{ color: '#008F11', margin: '4px 0 0 0', fontFamily: 'monospace' }}>
+                                // DEVNET_LIQUIDITY_PROTOCOL
+                            </p>
+                        </div>
                     </div>
 
-                    {/* Background decoration */}
-                    <div style={{ position: 'absolute', top: -40, right: -40, opacity: 0.1 }}>
-                        <Droplets size={200} />
+                    <div style={{
+                        background: '#001100',
+                        border: '1px solid #003300',
+                        borderRadius: '4px',
+                        padding: '16px',
+                        marginBottom: '32px',
+                        fontFamily: 'monospace',
+                        color: '#00ff41',
+                        minHeight: '120px'
+                    }}>
+                        {logs.length === 0 && <span style={{ opacity: 0.5 }}>System ready. Awaiting input...</span>}
+                        {logs.map((log, i) => (
+                            <div key={i} style={{ marginBottom: '4px' }}>{log}</div>
+                        ))}
                     </div>
-                </div>
 
-                {/* Form */}
-                <div className="glass-card" style={{ padding: '32px', borderRadius: '24px' }}>
-                    <form onSubmit={handleRequest}>
-                        <div style={{ marginBottom: '24px' }}>
-                            <label style={{ display: 'block', marginBottom: '8px', fontWeight: 600 }}>
-                                Wallet Address
-                            </label>
-                            <div style={{ position: 'relative' }}>
-                                <input
-                                    type="text"
-                                    value={address}
-                                    onChange={(e) => setAddress(e.target.value)}
-                                    placeholder={account || "0x..."}
-                                    className="input glass"
-                                    style={{ width: '100%', paddingLeft: '44px', fontFamily: 'monospace' }}
-                                />
-                                <Shield
-                                    size={18}
-                                    color="var(--text-muted)"
-                                    style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)' }}
-                                />
-                            </div>
-                            {account && !address && (
-                                <div style={{ marginTop: '8px', fontSize: '0.85rem', color: 'var(--primary)', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                    <CheckCircle size={12} /> Using connected wallet
-                                </div>
-                            )}
-                        </div>
-
-                        {error && (
-                            <div className="animate-in" style={{
+                    <form onSubmit={requestFunds} style={{ display: 'flex', gap: '16px' }}>
+                        <input
+                            type="text"
+                            value={address}
+                            onChange={e => setAddress(e.target.value)}
+                            placeholder="0x..."
+                            style={{
+                                flex: 1,
+                                background: 'transparent',
+                                border: '1px solid #00ff41',
                                 padding: '16px',
-                                background: 'rgba(239, 68, 68, 0.1)',
-                                border: '1px solid rgba(239, 68, 68, 0.2)',
-                                borderRadius: '12px',
-                                color: 'var(--error)',
-                                marginBottom: '24px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '12px'
-                            }}>
-                                <AlertTriangle size={20} />
-                                <div>{error}</div>
-                            </div>
-                        )}
-
-                        {success && (
-                            <div className="animate-in" style={{
-                                padding: '16px',
-                                background: 'rgba(16, 185, 129, 0.1)',
-                                border: '1px solid rgba(16, 185, 129, 0.2)',
-                                borderRadius: '12px',
-                                color: 'var(--success)',
-                                marginBottom: '24px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '12px'
-                            }}>
-                                <CheckCircle size={20} />
-                                <div>{success}</div>
-                            </div>
-                        )}
-
+                                color: '#00ff41',
+                                fontFamily: 'monospace',
+                                fontSize: '1.1rem',
+                                borderRadius: '4px',
+                                outline: 'none'
+                            }}
+                        />
                         <button
                             type="submit"
-                            className="btn btn-primary"
-                            style={{ width: '100%', padding: '16px', fontSize: '1.1rem', justifyContent: 'center' }}
-                            disabled={loading}
+                            disabled={status === 'mining'}
+                            style={{
+                                background: status === 'mining' ? '#003300' : '#00ff41',
+                                color: 'black',
+                                border: 'none',
+                                padding: '0 32px',
+                                fontFamily: 'monospace',
+                                fontSize: '1.1rem',
+                                fontWeight: 'bold',
+                                borderRadius: '4px',
+                                cursor: status === 'mining' ? 'not-allowed' : 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '8px'
+                            }}
                         >
-                            {loading ? (
-                                <>Processing...</>
+                            {status === 'mining' ? (
+                                <><div className="spinner" style={{ borderTopColor: 'black' }} /> INJECTING</>
                             ) : (
-                                <>Get 10 SMC <ArrowRight size={20} /></>
+                                <><Zap size={18} /> INITIALIZE</>
                             )}
                         </button>
                     </form>
 
-                    <div style={{ marginTop: '24px', paddingTop: '24px', borderTop: '1px solid var(--glass-border)', textAlign: 'center' }}>
-                        <div style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>
-                            Limit: 10 SMC per request • Network: SmartChain Mainnet
+                    {status === 'success' && (
+                        <div style={{
+                            marginTop: '24px',
+                            padding: '16px',
+                            background: 'rgba(0, 255, 65, 0.1)',
+                            border: '1px solid #00ff41',
+                            borderRadius: '4px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '12px'
+                        }}>
+                            <CheckCircle size={20} color="#00ff41" />
+                            <span style={{ color: '#00ff41', fontFamily: 'monospace' }}>
+                                SUCCESS. Transaction Hash: {txHash}
+                            </span>
+                        </div>
+                    )}
+
+                    <div style={{ marginTop: '32px', display: 'flex', gap: '24px', justifyContent: 'center' }}>
+                        <div style={{ textAlign: 'center' }}>
+                            <div style={{ color: '#008F11', fontSize: '0.8rem', fontFamily: 'monospace' }}>NETWORK STATUS</div>
+                            <div style={{ color: '#00ff41', fontWeight: 'bold', fontFamily: 'monospace' }}>ONLINE</div>
+                        </div>
+                        <div style={{ textAlign: 'center' }}>
+                            <div style={{ color: '#008F11', fontSize: '0.8rem', fontFamily: 'monospace' }}>BLOCK TIME</div>
+                            <div style={{ color: '#00ff41', fontWeight: 'bold', fontFamily: 'monospace' }}>1000ms</div>
+                        </div>
+                        <div style={{ textAlign: 'center' }}>
+                            <div style={{ color: '#008F11', fontSize: '0.8rem', fontFamily: 'monospace' }}>AVAILABLE</div>
+                            <div style={{ color: '#00ff41', fontWeight: 'bold', fontFamily: 'monospace' }}>∞ SMC</div>
                         </div>
                     </div>
                 </div>
