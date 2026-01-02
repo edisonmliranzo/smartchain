@@ -21,6 +21,12 @@ import Graffiti from './pages/Graffiti';
 import Network from './pages/Network';
 import ChainChat from './pages/ChainChat';
 import Whitepaper from './pages/Whitepaper';
+import Swap from './pages/Swap';
+import NFTStudio from './pages/NFTStudio';
+import Analytics from './pages/Analytics';
+import Lottery from './pages/Lottery';
+import Leaderboard from './pages/Leaderboard';
+import Bridge from './pages/Bridge';
 
 function App() {
   return (
@@ -51,6 +57,12 @@ function App() {
               <Route path="/graffiti" element={<Graffiti />} />
               <Route path="/contract" element={<ContractInteract />} />
               <Route path="/whitepaper" element={<Whitepaper />} />
+              <Route path="/swap" element={<Swap />} />
+              <Route path="/nft-studio" element={<NFTStudio />} />
+              <Route path="/analytics" element={<Analytics />} />
+              <Route path="/lottery" element={<Lottery />} />
+              <Route path="/leaderboard" element={<Leaderboard />} />
+              <Route path="/bridge" element={<Bridge />} />
             </Routes>
           </main>
         </div>

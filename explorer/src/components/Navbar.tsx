@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Search, Blocks, Receipt, Droplets, Home, Menu, X, Cpu, Shield, Wallet, Rocket, Bot, Lock, PieChart, FileCode, ScanLine, Palette, Globe, MessageSquare, FileText } from 'lucide-react';
+import { Search, Blocks, Receipt, Droplets, Home, Menu, X, Cpu, Shield, Wallet, Rocket, Bot, Lock, PieChart, FileCode, ScanLine, Palette, Globe, MessageSquare, FileText, ArrowDownUp, Image, BarChart3, Ticket, Trophy, ArrowLeftRight } from 'lucide-react';
 import { useWeb3 } from '../contexts/Web3Context';
 import ThemeToggle from './ThemeToggle';
 import QRScanner from './QRScanner';
@@ -143,6 +143,47 @@ export default function Navbar() {
                     <NavLink to="/validators" icon={<Shield size={18} />} label="Validators" active={isActive('/validators')} />
                     <NavLink to="/network" icon={<Globe size={18} />} label="Network" active={isActive('/network')} />
                     <NavLink to="/chat" icon={<MessageSquare size={18} />} label="Chat" active={isActive('/chat')} />
+
+                    {/* DeFi Dropdown */}
+                    <div className="nav-dropdown-container" style={{ position: 'relative' }}>
+                        <button className="nav-link shine-effect" style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '10px',
+                            padding: '10px 18px',
+                            borderRadius: '12px',
+                            background: 'transparent',
+                            border: '1px solid transparent',
+                            color: 'var(--text-secondary)',
+                            fontSize: '0.9rem',
+                            fontWeight: 600,
+                            cursor: 'pointer',
+                        }}>
+                            <Rocket size={18} />
+                            DeFi
+                            <ScanLine size={12} style={{ opacity: 0.5, transform: 'rotate(90deg)' }} />
+                        </button>
+                        <div className="nav-dropdown-menu glass-card" style={{
+                            position: 'absolute',
+                            top: '100%',
+                            right: 0,
+                            width: '240px',
+                            padding: '8px',
+                            marginTop: '8px',
+                            borderRadius: '16px',
+                            display: 'none',
+                            flexDirection: 'column',
+                            gap: '4px',
+                            boxShadow: '0 10px 40px rgba(0,0,0,0.2)'
+                        }}>
+                            <NavLink to="/swap" icon={<ArrowDownUp size={18} />} label="SmartSwap" active={isActive('/swap')} fullWidth />
+                            <NavLink to="/nft-studio" icon={<Image size={18} />} label="NFT Studio" active={isActive('/nft-studio')} fullWidth />
+                            <NavLink to="/analytics" icon={<BarChart3 size={18} />} label="Analytics" active={isActive('/analytics')} fullWidth />
+                            <NavLink to="/lottery" icon={<Ticket size={18} />} label="Lottery" active={isActive('/lottery')} fullWidth />
+                            <NavLink to="/leaderboard" icon={<Trophy size={18} />} label="Leaderboard" active={isActive('/leaderboard')} fullWidth />
+                            <NavLink to="/bridge" icon={<ArrowLeftRight size={18} />} label="Bridge" active={isActive('/bridge')} fullWidth />
+                        </div>
+                    </div>
 
                     {/* Developers Dropdown */}
                     <div className="nav-dropdown-container" style={{ position: 'relative' }}>
