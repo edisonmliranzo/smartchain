@@ -309,6 +309,8 @@ export class P2PNetwork extends EventEmitter {
             const result = await this.blockchain.addBlock(block);
             if (result.success) {
                 console.log(`[P2P] Synced block #${block.header.number}`);
+            } else {
+                console.error(`[P2P] Failed to sync block #${block.header.number}: ${result.error}`);
             }
         }
     }
