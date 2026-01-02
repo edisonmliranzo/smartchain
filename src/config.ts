@@ -54,7 +54,7 @@ export const CHAIN_CONFIG: ChainConfig = {
     genesisBlock: {
         header: {
             number: 0,
-            timestamp: Date.now(),
+            timestamp: 1704067200000, // Static Genesis Timestamp (Jan 1 2024) to ensure same hash across nodes
             parentHash: '0x' + '0'.repeat(64),
             stateRoot: '0x' + '0'.repeat(64),
             transactionsRoot: '0x' + '0'.repeat(64),
