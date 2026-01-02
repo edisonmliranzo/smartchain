@@ -11,7 +11,10 @@ import {
     Activity,
     Shield,
     Zap,
-    Trophy
+    Trophy,
+    Globe,
+    MessageSquare,
+    Rocket
 } from 'lucide-react';
 import MempoolVisualizer from '../components/MempoolVisualizer';
 
@@ -163,6 +166,41 @@ export default function Dashboard() {
                     value={stats?.averageBlockTime ? `${(stats.averageBlockTime / 1000).toFixed(1)}s` : '3.0s'}
                     loading={statsLoading}
                 />
+            </div>
+
+
+
+            {/* Feature Cards */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px', marginBottom: '48px' }}>
+                <Link to="/network" className="glass-card hover-card" style={{ padding: '24px', borderRadius: '24px', display: 'flex', flexDirection: 'column', gap: '16px', textDecoration: 'none' }}>
+                    <div style={{ width: '48px', height: '48px', borderRadius: '14px', background: 'rgba(56, 189, 248, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#38bdf8' }}>
+                        <Globe size={24} />
+                    </div>
+                    <div>
+                        <h3 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '8px', color: 'var(--text-primary)' }}>3D Network Map</h3>
+                        <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Visualize validator nodes and P2P topology in real-time.</p>
+                    </div>
+                </Link>
+
+                <Link to="/chat" className="glass-card hover-card" style={{ padding: '24px', borderRadius: '24px', display: 'flex', flexDirection: 'column', gap: '16px', textDecoration: 'none' }}>
+                    <div style={{ width: '48px', height: '48px', borderRadius: '14px', background: 'rgba(168, 85, 247, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#a855f7' }}>
+                        <MessageSquare size={24} />
+                    </div>
+                    <div>
+                        <h3 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '8px', color: 'var(--text-primary)' }}>ChainChat</h3>
+                        <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Decentralized on-chain messaging. Proof of speed.</p>
+                    </div>
+                </Link>
+
+                <Link to="/create-token" className="glass-card hover-card" style={{ padding: '24px', borderRadius: '24px', display: 'flex', flexDirection: 'column', gap: '16px', textDecoration: 'none' }}>
+                    <div style={{ width: '48px', height: '48px', borderRadius: '14px', background: 'rgba(236, 72, 153, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ec4899' }}>
+                        <Rocket size={24} />
+                    </div>
+                    <div>
+                        <h3 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '8px', color: 'var(--text-primary)' }}>Token Factory</h3>
+                        <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Deploy your own ERC20 token in seconds. No code.</p>
+                    </div>
+                </Link>
             </div>
 
             <div style={{
@@ -390,7 +428,7 @@ export default function Dashboard() {
                     </div>
                 )}
             </div>
-        </div>
+        </div >
     );
 }
 

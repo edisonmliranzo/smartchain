@@ -1,5 +1,12 @@
 # SmartChain Fixes & Validator Status
 
+## New Features (Explorer)
+
+- **Visual Network Map**: 3D Globe visualization of validators (`/network`).
+- **ChainChat**: On-chain decentralized chat room (`/chat`).
+- **Faucet UI**: Cyberpunk-themed liquidity request page (`/faucet`).
+- **SmartLaunch**: No-code Token Factory (`/create-token`).
+
 ## Work Completed
 
 We successfully debugged and fixed several critical issues preventing the Validator nodes from syncing and operating correctly.
