@@ -111,7 +111,7 @@ export default function Dashboard() {
                             </Link>
                             <div className="badge glass" style={{ padding: '8px 14px', borderRadius: '12px', border: '1px solid var(--glass-border)', fontSize: '0.85rem' }}>
                                 <Shield size={14} style={{ marginRight: '6px', color: 'var(--secondary-light)' }} />
-                                Chain ID: {chainInfo?.chainId || 1337}
+                                Chain ID: {chainInfo?.chainId || 7001}
                             </div>
                         </div>
                     </div>

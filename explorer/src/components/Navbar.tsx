@@ -279,7 +279,7 @@ export default function Navbar() {
 function WalletButton() {
     const { account, connectWallet, isConnecting, chainId, addNetwork, connectionError, hasWallet, clearError } = useWeb3();
     const [showModal, setShowModal] = useState(false);
-    const isWrongNetwork = chainId !== 1337 && account;
+    const isWrongNetwork = chainId !== 7001 && account;
 
     const handleConnect = async () => {
         if (!hasWallet) {

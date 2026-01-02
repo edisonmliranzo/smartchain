@@ -132,7 +132,7 @@ export default function TokenCreate() {
         }
     };
 
-    const isWrongNetwork = chainId !== 1337;
+    const isWrongNetwork = chainId !== 7001;
 
     return (
         <div className="container animate-in" style={{ paddingTop: '32px', paddingBottom: '64px' }}>
@@ -313,7 +313,7 @@ export default function TokenCreate() {
                                 <PreviewRow label="Name" value={name || '...'} />
                                 <PreviewRow label="Symbol" value={symbol || '...'} />
                                 <PreviewRow label="Supply" value={supply ? `${new Intl.NumberFormat().format(parseInt(supply))} ${symbol || ''}` : '...'} />
-                                <PreviewRow label="Network" value={chainId === 1337 ? 'SmartChain Local' : 'Unknown'} />
+                                <PreviewRow label="Network" value={chainId === 7001 ? 'SmartChain Mainnet' : 'Unknown'} />
                             </div>
 
                             <div style={{ marginTop: '32px', padding: '16px', borderRadius: '12px', background: 'rgba(255,255,255,0.05)', fontSize: '0.9rem', color: 'var(--text-muted)' }}>

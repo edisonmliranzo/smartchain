@@ -30,8 +30,8 @@ export const useWeb3 = () => useContext(Web3Context);
 
 // SmartChain Network Params
 const SMARTCHAIN_PARAMS = {
-    chainId: '0x539', // 1337
-    chainName: 'SmartChain Local',
+    chainId: '0x1B59', // 7001
+    chainName: 'SmartChain Mainnet',
     nativeCurrency: {
         name: 'SmartCoin',
         symbol: 'SMC',
@@ -110,9 +110,8 @@ export function Web3Provider({ children }: { children: ReactNode }) {
             const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
             setAccount(accounts[0]);
 
-            // Check network
             const currentChainId = await window.ethereum.request({ method: 'eth_chainId' });
-            if (Number(currentChainId) !== 1337) {
+            if (Number(currentChainId) !== 7001) {
                 await addNetwork();
             }
         } catch (error: any) {

@@ -46,8 +46,8 @@ export const DEV_ACCOUNTS = [
 
 // Chain configuration
 export const CHAIN_CONFIG: ChainConfig = {
-    chainId: 1337, // Local development chain
-    chainName: 'SmartChain',
+    chainId: 7001, // SmartChain Mainnet
+    chainName: 'SmartChain Mainnet',
     symbol: 'SMC',
     blockTime: 1000, // 1 second (Turbo Mode)
     blockGasLimit: BigInt(100000000), // 100M gas
