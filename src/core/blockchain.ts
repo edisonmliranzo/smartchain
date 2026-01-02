@@ -33,7 +33,7 @@ export class Blockchain extends EventEmitter {
         super();
         this.config = config;
         this.network = network;
-        this.dbFile = path.join(process.cwd(), 'data', `${network}_chain_data.json`);
+        this.dbFile = path.join(process.cwd(), 'data', `${network}_chain_v7001.json`);
         this.state = new StateManager();
         this.mempool = new Mempool();
         this.evm = new EVMExecutor(this.state, config.chainId, config.blockGasLimit);
