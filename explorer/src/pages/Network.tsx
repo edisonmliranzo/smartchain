@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import NetworkGlobe from '../components/NetworkGlobe';
 import { Server, Activity, Globe as GlobeIcon, Zap, Shield } from 'lucide-react';
 import { api } from '../api';

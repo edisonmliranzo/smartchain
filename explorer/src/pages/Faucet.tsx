@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { api } from '../api';
-import { Terminal, Shield, Zap, AlertTriangle, CheckCircle } from 'lucide-react';
+import { Terminal, Zap, CheckCircle } from 'lucide-react';
 
 export default function Faucet() {
     const [address, setAddress] = useState('');
