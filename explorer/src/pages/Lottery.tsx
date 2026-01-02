@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Ticket, Trophy, Users, Clock, Zap, Gift, Star, ChevronRight } from 'lucide-react';
+import { Ticket, Trophy, Users, Zap, Gift, Star } from 'lucide-react';
 import { useWeb3 } from '../contexts/Web3Context';
 
 export default function Lottery() {

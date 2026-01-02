@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { TrendingUp, Activity, Zap, Users, Fuel, Clock, BarChart3, ArrowUp, ArrowDown } from 'lucide-react';
+import { TrendingUp, Activity, Zap, Users, Fuel, BarChart3, ArrowUp, ArrowDown } from 'lucide-react';
 import { api } from '../api';
 
 export default function Analytics() {
