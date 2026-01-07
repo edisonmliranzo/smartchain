@@ -28,6 +28,17 @@ import Lottery from './pages/Lottery';
 import Leaderboard from './pages/Leaderboard';
 import Bridge from './pages/Bridge';
 
+// New features
+import NodeDashboard from './pages/NodeDashboard';
+import RewardsCalculator from './pages/RewardsCalculator';
+import NetworkStatus from './pages/NetworkStatus';
+import WhaleTracker from './pages/WhaleTracker';
+import TokenAnalytics from './pages/TokenAnalytics';
+import DeFiDashboard from './pages/DeFiDashboard';
+import PortfolioTracker from './pages/PortfolioTracker';
+import GasTracker from './pages/GasTracker';
+import ContractIDE from './pages/ContractIDE';
+
 function App() {
   return (
     <ThemeProvider>
@@ -63,6 +74,16 @@ function App() {
               <Route path="/lottery" element={<Lottery />} />
               <Route path="/leaderboard" element={<Leaderboard />} />
               <Route path="/bridge" element={<Bridge />} />
+              {/* New Features */}
+              <Route path="/node-dashboard" element={<NodeDashboard />} />
+              <Route path="/rewards-calculator" element={<RewardsCalculator />} />
+              <Route path="/network-status" element={<NetworkStatus />} />
+              <Route path="/whale-tracker" element={<WhaleTracker />} />
+              <Route path="/token-analytics" element={<TokenAnalytics />} />
+              <Route path="/defi-dashboard" element={<DeFiDashboard />} />
+              <Route path="/portfolio-tracker" element={<PortfolioTracker />} />
+              <Route path="/gas-tracker" element={<GasTracker />} />
+              <Route path="/contract-ide" element={<ContractIDE />} />
             </Routes>
           </main>
         </div>
