@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Search, Blocks, Receipt, Droplets, Home, Menu, X, Cpu, Shield, Wallet, Rocket, Bot, Lock, PieChart, FileCode, ScanLine, Palette, Globe, MessageSquare, FileText, ArrowDownUp, Image, BarChart3, Ticket, Trophy, ArrowLeftRight } from 'lucide-react';
+import { Search, Blocks, Receipt, Droplets, Home, Menu, X, Cpu, Shield, Wallet, Rocket, Bot, Lock, PieChart, FileCode, ScanLine, Palette, Globe, MessageSquare, FileText, ArrowDownUp, Image, BarChart3, Ticket, Trophy, ArrowLeftRight, CreditCard } from 'lucide-react';
 import { useWeb3 } from '../contexts/Web3Context';
 import ThemeToggle from './ThemeToggle';
 import QRScanner from './QRScanner';
@@ -182,6 +182,8 @@ export default function Navbar() {
                             <NavLink to="/lottery" icon={<Ticket size={18} />} label="Lottery" active={isActive('/lottery')} fullWidth />
                             <NavLink to="/leaderboard" icon={<Trophy size={18} />} label="Leaderboard" active={isActive('/leaderboard')} fullWidth />
                             <NavLink to="/bridge" icon={<ArrowLeftRight size={18} />} label="Bridge" active={isActive('/bridge')} fullWidth />
+                            <div style={{ borderTop: '1px solid var(--glass-border)', margin: '4px 0' }}></div>
+                            <NavLink to="/credits" icon={<CreditCard size={18} />} label="Buy Credits" active={isActive('/credits')} fullWidth />
                         </div>
                     </div>
 
